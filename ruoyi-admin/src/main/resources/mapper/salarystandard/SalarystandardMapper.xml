@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.salarystandard.mapper.SalarystandardMapper">
+    
+    <resultMap type="Salarystandard" id="SalarystandardResult">
+        <result property="posId"    column="pos_id"    />
+        <result property="basicSalary"    column="basic_salary"    />
+        <result property="salaryLevel"    column="salary_level"    />
+        <result property="positionAllowance"    column="position_allowance"    />
+    </resultMap>
+
+    <sql id="selectSalarystandardVo">
+        select pos_id, basic_salary, salary_level, position_allowance from salarystandard
+    </sql>
+
+    <select id="selectSalarystandardList" parameterType="Salarystandard" resultMap="SalarystandardResult">
+        <include refid="selectSalarystandardVo"/>
+        <where>  
+            <if test="posId != null "> and pos_id = #{posId}</if>
+            <if test="basicSalary != null "> and basic_salary = #{basicSalary}</if>
+            <if test="salaryLevel != null  and salaryLevel != ''"> and salary_level = #{salaryLevel}</if>
+            <if test="positionAllowance != null "> and position_allowance = #{positionAllowance}</if>
+        </where>
+    </select>
+    
+    <select id="selectSalarystandardByPosId" parameterType="Long" resultMap="SalarystandardResult">
+        <include refid="selectSalarystandardVo"/>
+        where pos_id = #{posId}
+    </select>
+
+    <insert id="insertSalarystandard" parameterType="Salarystandard">
+        insert into salarystandard
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="posId != null">pos_id,</if>
+            <if test="basicSalary != null">basic_salary,</if>
+            <if test="salaryLevel != null">salary_level,</if>
+            <if test="positionAllowance != null">position_allowance,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="posId != null">#{posId},</if>
+            <if test="basicSalary != null">#{basicSalary},</if>
+            <if test="salaryLevel != null">#{salaryLevel},</if>
+            <if test="positionAllowance != null">#{positionAllowance},</if>
+         </trim>
+    </insert>
+
+    <update id="updateSalarystandard" parameterType="Salarystandard">
+        update salarystandard
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="basicSalary != null">basic_salary = #{basicSalary},</if>
+            <if test="salaryLevel != null">salary_level = #{salaryLevel},</if>
+            <if test="positionAllowance != null">position_allowance = #{positionAllowance},</if>
+        </trim>
+        where pos_id = #{posId}
+    </update>
+
+    <delete id="deleteSalarystandardByPosId" parameterType="Long">
+        delete from salarystandard where pos_id = #{posId}
+    </delete>
+
+    <delete id="deleteSalarystandardByPosIds" parameterType="String">
+        delete from salarystandard where pos_id in 
+        <foreach item="posId" collection="array" open="(" separator="," close=")">
+            #{posId}
+        </foreach>
+    </delete>
+</mapper>

@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.employee.mapper.EmployeeMapper">
+    
+    <resultMap type="Employee" id="EmployeeResult">
+        <result property="empId"    column="emp_id"    />
+        <result property="empName"    column="emp_name"    />
+        <result property="empGender"    column="emp_gender"    />
+        <result property="empAge"    column="emp_age"    />
+        <result property="empPhone"    column="emp_phone"    />
+        <result property="deptId"    column="dept_id"    />
+        <result property="posId"    column="pos_id"    />
+    </resultMap>
+
+    <sql id="selectEmployeeVo">
+        select emp_id, emp_name, emp_gender, emp_age, emp_phone, dept_id, pos_id from employee
+    </sql>
+
+    <select id="selectEmployeeList" parameterType="Employee" resultMap="EmployeeResult">
+        <include refid="selectEmployeeVo"/>
+        <where>  
+            <if test="empId != null "> and emp_id = #{empId}</if>
+            <if test="empName != null  and empName != ''"> and emp_name like concat('%', #{empName}, '%')</if>
+            <if test="empGender != null  and empGender != ''"> and emp_gender = #{empGender}</if>
+            <if test="empAge != null "> and emp_age = #{empAge}</if>
+            <if test="empPhone != null  and empPhone != ''"> and emp_phone = #{empPhone}</if>
+            <if test="deptId != null "> and dept_id = #{deptId}</if>
+            <if test="posId != null "> and pos_id = #{posId}</if>
+        </where>
+    </select>
+    
+    <select id="selectEmployeeByEmpId" parameterType="Long" resultMap="EmployeeResult">
+        <include refid="selectEmployeeVo"/>
+        where emp_id = #{empId}
+    </select>
+
+    <insert id="insertEmployee" parameterType="Employee" useGeneratedKeys="true" keyProperty="empId">
+        insert into employee
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="empName != null and empName != ''">emp_name,</if>
+            <if test="empGender != null">emp_gender,</if>
+            <if test="empAge != null">emp_age,</if>
+            <if test="empPhone != null">emp_phone,</if>
+            <if test="deptId != null">dept_id,</if>
+            <if test="posId != null">pos_id,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="empName != null and empName != ''">#{empName},</if>
+            <if test="empGender != null">#{empGender},</if>
+            <if test="empAge != null">#{empAge},</if>
+            <if test="empPhone != null">#{empPhone},</if>
+            <if test="deptId != null">#{deptId},</if>
+            <if test="posId != null">#{posId},</if>
+         </trim>
+    </insert>
+
+    <update id="updateEmployee" parameterType="Employee">
+        update employee
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="empName != null and empName != ''">emp_name = #{empName},</if>
+            <if test="empGender != null">emp_gender = #{empGender},</if>
+            <if test="empAge != null">emp_age = #{empAge},</if>
+            <if test="empPhone != null">emp_phone = #{empPhone},</if>
+            <if test="deptId != null">dept_id = #{deptId},</if>
+            <if test="posId != null">pos_id = #{posId},</if>
+        </trim>
+        where emp_id = #{empId}
+    </update>
+
+    <delete id="deleteEmployeeByEmpId" parameterType="Long">
+        delete from employee where emp_id = #{empId}
+    </delete>
+
+    <delete id="deleteEmployeeByEmpIds" parameterType="String">
+        delete from employee where emp_id in 
+        <foreach item="empId" collection="array" open="(" separator="," close=")">
+            #{empId}
+        </foreach>
+    </delete>
+</mapper>

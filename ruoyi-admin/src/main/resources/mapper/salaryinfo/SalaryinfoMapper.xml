@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.salaryinfo.mapper.SalaryinfoMapper">
+    
+    <resultMap type="Salaryinfo" id="SalaryinfoResult">
+        <result property="empId"    column="emp_id"    />
+        <result property="payableSalary"    column="payable_salary"    />
+        <result property="deductionSalary"    column="deduction_salary"    />
+        <result property="empName"    column="emp_name"    />
+        <result property="actualSalary"    column="actual_salary"    />
+    </resultMap>
+
+    <sql id="selectSalaryinfoVo">
+        select emp_id, payable_salary, deduction_salary, emp_name, actual_salary from salaryinfo
+    </sql>
+
+    <select id="selectSalaryinfoList" parameterType="Salaryinfo" resultMap="SalaryinfoResult">
+        <include refid="selectSalaryinfoVo"/>
+        <where>  
+            <if test="empId != null "> and emp_id = #{empId}</if>
+            <if test="payableSalary != null "> and payable_salary = #{payableSalary}</if>
+            <if test="deductionSalary != null "> and deduction_salary = #{deductionSalary}</if>
+            <if test="empName != null  and empName != ''"> and emp_name like concat('%', #{empName}, '%')</if>
+            <if test="actualSalary != null "> and actual_salary = #{actualSalary}</if>
+        </where>
+    </select>
+    
+    <select id="selectSalaryinfoByEmpId" parameterType="Long" resultMap="SalaryinfoResult">
+        <include refid="selectSalaryinfoVo"/>
+        where emp_id = #{empId}
+    </select>
+
+    <insert id="insertSalaryinfo" parameterType="Salaryinfo">
+        insert into salaryinfo
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="empId != null">emp_id,</if>
+            <if test="payableSalary != null">payable_salary,</if>
+            <if test="deductionSalary != null">deduction_salary,</if>
+            <if test="empName != null and empName != ''">emp_name,</if>
+            <if test="actualSalary != null">actual_salary,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="empId != null">#{empId},</if>
+            <if test="payableSalary != null">#{payableSalary},</if>
+            <if test="deductionSalary != null">#{deductionSalary},</if>
+            <if test="empName != null and empName != ''">#{empName},</if>
+            <if test="actualSalary != null">#{actualSalary},</if>
+         </trim>
+    </insert>
+
+    <update id="updateSalaryinfo" parameterType="Salaryinfo">
+        update salaryinfo
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="payableSalary != null">payable_salary = #{payableSalary},</if>
+            <if test="deductionSalary != null">deduction_salary = #{deductionSalary},</if>
+            <if test="empName != null and empName != ''">emp_name = #{empName},</if>
+            <if test="actualSalary != null">actual_salary = #{actualSalary},</if>
+        </trim>
+        where emp_id = #{empId}
+    </update>
+
+    <delete id="deleteSalaryinfoByEmpId" parameterType="Long">
+        delete from salaryinfo where emp_id = #{empId}
+    </delete>
+
+    <delete id="deleteSalaryinfoByEmpIds" parameterType="String">
+        delete from salaryinfo where emp_id in 
+        <foreach item="empId" collection="array" open="(" separator="," close=")">
+            #{empId}
+        </foreach>
+    </delete>
+</mapper>

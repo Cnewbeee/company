@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.attendance.mapper.AttendanceMapper">
+    
+    <resultMap type="Attendance" id="AttendanceResult">
+        <result property="empId"    column="emp_id"    />
+        <result property="attendDays"    column="attend_days"    />
+        <result property="overtimeTimes"    column="overtime_times"    />
+        <result property="attendBonus"    column="attend_bonus"    />
+    </resultMap>
+
+    <sql id="selectAttendanceVo">
+        select emp_id, attend_days, overtime_times, attend_bonus from attendance
+    </sql>
+
+    <select id="selectAttendanceList" parameterType="Attendance" resultMap="AttendanceResult">
+        <include refid="selectAttendanceVo"/>
+        <where>  
+            <if test="empId != null "> and emp_id = #{empId}</if>
+            <if test="attendDays != null "> and attend_days = #{attendDays}</if>
+            <if test="overtimeTimes != null "> and overtime_times = #{overtimeTimes}</if>
+            <if test="attendBonus != null "> and attend_bonus = #{attendBonus}</if>
+        </where>
+    </select>
+    
+    <select id="selectAttendanceByEmpId" parameterType="Long" resultMap="AttendanceResult">
+        <include refid="selectAttendanceVo"/>
+        where emp_id = #{empId}
+    </select>
+
+    <insert id="insertAttendance" parameterType="Attendance">
+        insert into attendance
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="empId != null">emp_id,</if>
+            <if test="attendDays != null">attend_days,</if>
+            <if test="overtimeTimes != null">overtime_times,</if>
+            <if test="attendBonus != null">attend_bonus,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="empId != null">#{empId},</if>
+            <if test="attendDays != null">#{attendDays},</if>
+            <if test="overtimeTimes != null">#{overtimeTimes},</if>
+            <if test="attendBonus != null">#{attendBonus},</if>
+         </trim>
+    </insert>
+
+    <update id="updateAttendance" parameterType="Attendance">
+        update attendance
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="attendDays != null">attend_days = #{attendDays},</if>
+            <if test="overtimeTimes != null">overtime_times = #{overtimeTimes},</if>
+            <if test="attendBonus != null">attend_bonus = #{attendBonus},</if>
+        </trim>
+        where emp_id = #{empId}
+    </update>
+
+    <delete id="deleteAttendanceByEmpId" parameterType="Long">
+        delete from attendance where emp_id = #{empId}
+    </delete>
+
+    <delete id="deleteAttendanceByEmpIds" parameterType="String">
+        delete from attendance where emp_id in 
+        <foreach item="empId" collection="array" open="(" separator="," close=")">
+            #{empId}
+        </foreach>
+    </delete>
+</mapper>

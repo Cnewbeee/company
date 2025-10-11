@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.jobposition.mapper.JobpositionMapper">
+    
+    <resultMap type="Jobposition" id="JobpositionResult">
+        <result property="posId"    column="pos_id"    />
+        <result property="posName"    column="pos_name"    />
+        <result property="deptId"    column="dept_id"    />
+    </resultMap>
+
+    <sql id="selectJobpositionVo">
+        select pos_id, pos_name, dept_id from jobposition
+    </sql>
+
+    <select id="selectJobpositionList" parameterType="Jobposition" resultMap="JobpositionResult">
+        <include refid="selectJobpositionVo"/>
+        <where>  
+            <if test="posId != null "> and pos_id = #{posId}</if>
+            <if test="posName != null  and posName != ''"> and pos_name like concat('%', #{posName}, '%')</if>
+            <if test="deptId != null "> and dept_id = #{deptId}</if>
+        </where>
+    </select>
+    
+    <select id="selectJobpositionByPosId" parameterType="Long" resultMap="JobpositionResult">
+        <include refid="selectJobpositionVo"/>
+        where pos_id = #{posId}
+    </select>
+
+    <insert id="insertJobposition" parameterType="Jobposition" useGeneratedKeys="true" keyProperty="posId">
+        insert into jobposition
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="posName != null and posName != ''">pos_name,</if>
+            <if test="deptId != null">dept_id,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="posName != null and posName != ''">#{posName},</if>
+            <if test="deptId != null">#{deptId},</if>
+         </trim>
+    </insert>
+
+    <update id="updateJobposition" parameterType="Jobposition">
+        update jobposition
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="posName != null and posName != ''">pos_name = #{posName},</if>
+            <if test="deptId != null">dept_id = #{deptId},</if>
+        </trim>
+        where pos_id = #{posId}
+    </update>
+
+    <delete id="deleteJobpositionByPosId" parameterType="Long">
+        delete from jobposition where pos_id = #{posId}
+    </delete>
+
+    <delete id="deleteJobpositionByPosIds" parameterType="String">
+        delete from jobposition where pos_id in 
+        <foreach item="posId" collection="array" open="(" separator="," close=")">
+            #{posId}
+        </foreach>
+    </delete>
+</mapper>
