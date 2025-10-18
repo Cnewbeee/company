@@ -1,6 +1,14 @@
 <template>
   <div class="login">
-    <el-form ref="loginForm" :model="loginForm" :rules="loginRules" class="login-form">
+    <video class="login-bg-video" autoplay loop muted playsinline>
+      <source src="../assets/images/bg.mp4" type="video/mp4" />
+      您的浏览器不支持视频背景。
+    </video>
+    <div class="login-bg-mask"></div>
+    <el-form ref="loginForm" :model="loginForm" :rules="loginRules" class="login-form login-card">
+      <div class="login-logo">
+        <img src="~@/assets/logo/logo.png" alt="logo" />
+      </div>
       <h3 class="title">{{title}}</h3>
       <el-form-item prop="username">
         <el-input
@@ -8,6 +16,7 @@
           type="text"
           auto-complete="off"
           placeholder="账号"
+          class="login-input"
         >
           <svg-icon slot="prefix" icon-class="user" class="el-input__icon input-icon" />
         </el-input>
@@ -19,6 +28,7 @@
           auto-complete="off"
           placeholder="密码"
           @keyup.enter.native="handleLogin"
+          class="login-input"
         >
           <svg-icon slot="prefix" icon-class="password" class="el-input__icon input-icon" />
         </el-input>
@@ -30,6 +40,7 @@
           placeholder="验证码"
           style="width: 63%"
           @keyup.enter.native="handleLogin"
+          class="login-input"
         >
           <svg-icon slot="prefix" icon-class="validCode" class="el-input__icon input-icon" />
         </el-input>
@@ -43,6 +54,7 @@
           :loading="loading"
           size="medium"
           type="primary"
+          class="login-btn"
           style="width:100%;"
           @click.native.prevent="handleLogin"
         >
@@ -56,7 +68,7 @@
     </el-form>
     <!--  底部  -->
     <div class="el-login-footer">
-      <span>Copyright © 2018-2025 ruoyi.vip All Rights Reserved.</span>
+      <span>Copyright © 2018-2025 All Rights Reserved.</span>
     </div>
   </div>
 </template>
@@ -157,37 +169,88 @@ export default {
 </script>
 
 <style rel="stylesheet/scss" lang="scss">
+html, body, #app {
+  height: 100%;
+}
 .login {
   display: flex;
   justify-content: center;
   align-items: center;
-  height: 100%;
-  background-image: url("../assets/images/login-background.jpg");
-  background-size: cover;
+  height: 100vh;
+  min-height: 600px;
+  position: relative;
+  overflow: hidden;
+}
+.login-bg-video {
+  position: absolute;
+  left: 0; top: 0; width: 100%; height: 100%;
+  object-fit: cover;
+  z-index: 0;
+}
+.login-bg-mask {
+  position: absolute;
+  left: 0; top: 0; right: 0; bottom: 0;
+  background: rgba(255, 255, 255, 0.103);
+  z-index: 0;
+}
+.login-card {
+  box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.18);
+  border-radius: 16px;
+  background: rgba(255,255,255,0.92);
+  width: 410px;
+  padding: 32px 32px 10px 32px;
+  z-index: 1;
+  position: relative;
+  border: 1px solid #e6e6e6;
+}
+.login-logo {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: 18px;
+}
+.login-logo img {
+  width: 60px;
+  height: 60px;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(64,158,255,0.12);
 }
 .title {
-  margin: 0px auto 30px auto;
+  margin: 0px auto 28px auto;
   text-align: center;
-  color: #707070;
+  color: #409EFF;
+  font-size: 22px;
+  font-weight: bold;
+  letter-spacing: 2px;
 }
-
-.login-form {
-  border-radius: 6px;
-  background: #ffffff;
-  width: 400px;
-  padding: 25px 25px 5px 25px;
-  z-index: 1;
-  .el-input {
-    height: 38px;
-    input {
-      height: 38px;
-    }
-  }
-  .input-icon {
-    height: 39px;
-    width: 14px;
-    margin-left: 2px;
-  }
+.login-input .el-input__inner {
+  border-radius: 20px;
+  background: #f7fafd;
+  border: 1px solid #e6e6e6;
+  height: 40px;
+  font-size: 15px;
+}
+.login-input .el-input__prefix {
+  left: 8px;
+}
+.input-icon {
+  height: 39px;
+  width: 16px;
+  margin-left: 2px;
+}
+.login-btn {
+  border-radius: 20px;
+  background: linear-gradient(90deg, #409EFF 0%, #66b1ff 100%);
+  border: none;
+  color: #fff;
+  font-size: 17px;
+  font-weight: bold;
+  letter-spacing: 2px;
+  box-shadow: 0 2px 8px rgba(64,158,255,0.12);
+  transition: background 0.3s;
+}
+.login-btn:hover {
+  background: linear-gradient(90deg, #66b1ff 0%, #409EFF 100%);
 }
 .login-tip {
   font-size: 13px;
@@ -198,10 +261,17 @@ export default {
   width: 33%;
   height: 38px;
   float: right;
-  img {
-    cursor: pointer;
-    vertical-align: middle;
-  }
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+}
+.login-code-img {
+  height: 38px;
+  border-radius: 8px;
+  box-shadow: 0 1px 4px rgba(64,158,255,0.08);
+  margin-left: 8px;
+  cursor: pointer;
+  background: #fff;
 }
 .el-login-footer {
   height: 40px;
@@ -214,8 +284,7 @@ export default {
   font-family: Arial;
   font-size: 12px;
   letter-spacing: 1px;
-}
-.login-code-img {
-  height: 38px;
+  z-index: 10;
+  text-shadow: 0 1px 4px rgba(0,0,0,0.18);
 }
 </style>
