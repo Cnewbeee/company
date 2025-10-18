@@ -154,6 +154,7 @@
 
 <script>
 import { listSalaryinfo, getSalaryinfo, delSalaryinfo, addSalaryinfo, updateSalaryinfo } from "@/api/salaryinfo/salaryinfo"
+import eventBus from '@/utils/eventBus'
 
 export default {
   name: "Salaryinfo",
@@ -207,7 +208,13 @@ export default {
     }
   },
   created() {
+    eventBus.$on('refresh-salary-info', () => {
+      this.getList() // 刷新工资信息列表
+    })
     this.getList()
+  },
+  beforeDestroy() {
+    eventBus.$off('refresh-salary-info')
   },
   methods: {
     /** 查询员工工资信息列表 */

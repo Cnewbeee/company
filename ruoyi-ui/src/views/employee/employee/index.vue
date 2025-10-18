@@ -18,12 +18,15 @@
         />
       </el-form-item>
       <el-form-item label="职工性别" prop="empGender">
-        <el-input
+        <el-select
           v-model="queryParams.empGender"
-          placeholder="请输入职工性别"
+          placeholder="请选择职工性别"
           clearable
-          @keyup.enter.native="handleQuery"
-        />
+          @change="handleQuery"
+        >
+          <el-option label="男" value="男" />
+          <el-option label="女" value="女" />
+        </el-select>
       </el-form-item>
       <el-form-item label="职工年龄" prop="empAge">
         <el-input
@@ -41,21 +44,37 @@
           @keyup.enter.native="handleQuery"
         />
       </el-form-item>
-      <el-form-item label="所在部门编号" prop="deptId">
-        <el-input
+      <el-form-item label="所在部门" prop="deptId">
+        <el-select
           v-model="queryParams.deptId"
-          placeholder="请输入所在部门编号"
+          placeholder="请选择所在部门"
           clearable
-          @keyup.enter.native="handleQuery"
-        />
+          filterable
+          @change="handleQuery"
+        >
+          <el-option
+            v-for="item in deptOptions"
+            :key="item.deptId"
+            :label="item.deptName"
+            :value="item.deptId"
+          />
+        </el-select>
       </el-form-item>
-      <el-form-item label="担任职位编号" prop="posId">
-        <el-input
+      <el-form-item label="担任职位" prop="posId">
+        <el-select
           v-model="queryParams.posId"
-          placeholder="请输入担任职位编号"
+          placeholder="请选择担任职位"
           clearable
-          @keyup.enter.native="handleQuery"
-        />
+          filterable
+          @change="handleQuery"
+        >
+          <el-option
+            v-for="item in posOptions"
+            :key="item.posId"
+            :label="item.posName"
+            :value="item.posId"
+          />
+        </el-select>
       </el-form-item>
       <el-form-item>
         <el-button type="primary" icon="el-icon-search" size="mini" @click="handleQuery">搜索</el-button>
@@ -116,8 +135,8 @@
       <el-table-column label="职工性别" align="center" prop="empGender" />
       <el-table-column label="职工年龄" align="center" prop="empAge" />
       <el-table-column label="职工电话" align="center" prop="empPhone" />
-      <el-table-column label="所在部门编号" align="center" prop="deptId" />
-      <el-table-column label="担任职位编号" align="center" prop="posId" />
+      <el-table-column label="所在部门" align="center" prop="deptId" :formatter="formatDeptName" />
+      <el-table-column label="担任职位" align="center" prop="posId" :formatter="formatPosName" />
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
         <template slot-scope="scope">
           <el-button
@@ -153,7 +172,10 @@
           <el-input v-model="form.empName" placeholder="请输入职工姓名" />
         </el-form-item>
         <el-form-item label="职工性别" prop="empGender">
-          <el-input v-model="form.empGender" placeholder="请输入职工性别" />
+          <el-select v-model="form.empGender" placeholder="请选择职工性别" clearable>
+            <el-option label="男" value="男" />
+            <el-option label="女" value="女" />
+          </el-select>
         </el-form-item>
         <el-form-item label="职工年龄" prop="empAge">
           <el-input v-model="form.empAge" placeholder="请输入职工年龄" />
@@ -161,11 +183,25 @@
         <el-form-item label="职工电话" prop="empPhone">
           <el-input v-model="form.empPhone" placeholder="请输入职工电话" />
         </el-form-item>
-        <el-form-item label="所在部门编号" prop="deptId">
-          <el-input v-model="form.deptId" placeholder="请输入所在部门编号" />
+        <el-form-item label="所在部门" prop="deptId">
+          <el-select v-model="form.deptId" placeholder="请选择所在部门" clearable>
+            <el-option
+              v-for="item in deptOptions"
+              :key="item.deptId"
+              :label="item.deptName"
+              :value="item.deptId"
+            />
+          </el-select>
         </el-form-item>
-        <el-form-item label="担任职位编号" prop="posId">
-          <el-input v-model="form.posId" placeholder="请输入担任职位编号" />
+        <el-form-item label="担任职位" prop="posId">
+          <el-select v-model="form.posId" placeholder="请选择担任职位" clearable>
+            <el-option
+              v-for="item in posOptions"
+              :key="item.posId"
+              :label="item.posName"
+              :value="item.posId"
+            />
+          </el-select>
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
@@ -178,6 +214,9 @@
 
 <script>
 import { listEmployee, getEmployee, delEmployee, addEmployee, updateEmployee } from "@/api/employee/employee"
+import { listDepartment } from "@/api/department/department"
+import { listJobposition } from "@/api/jobposition/jobposition"
+import eventBus from '@/utils/eventBus'
 
 export default {
   name: "Employee",
@@ -201,6 +240,10 @@ export default {
       title: "",
       // 是否显示弹出层
       open: false,
+      // 部门选项
+      deptOptions: [],
+      // 岗位选项
+      posOptions: [],
       // 查询参数
       queryParams: {
         pageNum: 1,
@@ -220,13 +263,43 @@ export default {
         empName: [
           { required: true, message: "职工姓名不能为空", trigger: "blur" }
         ],
+        deptId: [
+          { required: true, message: "请选择所在部门", trigger: "change" }
+        ],
+        posId: [
+          { required: true, message: "请选择担任职位", trigger: "change" }
+        ]
       }
     }
   },
   created() {
     this.getList()
+    this.getDeptList()
+    this.getPosList()
   },
   methods: {
+    // 获取部门列表
+    getDeptList() {
+      listDepartment().then(response => {
+        this.deptOptions = response.rows
+      })
+    },
+    // 获取岗位列表
+    getPosList() {
+      listJobposition().then(response => {
+        this.posOptions = response.rows
+      })
+    },
+    // 部门名称格式化
+    formatDeptName(row) {
+      const dept = this.deptOptions.find(item => item.deptId === row.deptId)
+      return dept ? dept.deptName : row.deptId
+    },
+    // 岗位名称格式化
+    formatPosName(row) {
+      const pos = this.posOptions.find(item => item.posId === row.posId)
+      return pos ? pos.posName : row.posId
+    },
     /** 查询员工基本信息列表 */
     getList() {
       this.loading = true
@@ -313,6 +386,7 @@ export default {
         return delEmployee(empIds)
       }).then(() => {
         this.getList()
+        eventBus.$emit('refresh-salary-info')
         this.$modal.msgSuccess("删除成功")
       }).catch(() => {})
     },
@@ -325,3 +399,9 @@ export default {
   }
 }
 </script>
+<!-- 取消员工工资信息的级联删除。
+     员工信息表添加字段“是否离职”。
+     新建员工时检测员工部门和职位部门是否一致，不一致则提示错误信息。
+     员工工资信息表添加主键“记录编号”，添加字段“其他奖金或处罚”默认为0、“奖惩说明”默认为空，字段“应扣工资”改名为“出勤奖金”,根据应发工资和出勤奖金计算实发工资,应发工资=基本工资+职务补贴。
+     员工考勤信息表添加主键“记录编号”和员工工资信息表的主键相同，添加字段"缺勤天数"，根据缺勤天数计算出勤奖金=“1000 - 缺勤天数 * 100” ,添加考勤信息时，顺便添加工资信息。
+     -->
