@@ -2,6 +2,8 @@ package com.ruoyi.department.controller;
 
 import java.util.List;
 import javax.servlet.http.HttpServletResponse;
+import javax.validation.Valid;
+
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -75,7 +77,7 @@ public class DepartmentController extends BaseController
     @PreAuthorize("@ss.hasPermi('department:department:add')")
     @Log(title = "部门信息", businessType = BusinessType.INSERT)
     @PostMapping
-    public AjaxResult add(@RequestBody Department department)
+    public AjaxResult add(@Valid @RequestBody Department department)
     {
         return toAjax(departmentService.insertDepartment(department));
     }
@@ -86,7 +88,7 @@ public class DepartmentController extends BaseController
     @PreAuthorize("@ss.hasPermi('department:department:edit')")
     @Log(title = "部门信息", businessType = BusinessType.UPDATE)
     @PutMapping
-    public AjaxResult edit(@RequestBody Department department)
+    public AjaxResult edit(@Valid @RequestBody Department department)
     {
         return toAjax(departmentService.updateDepartment(department));
     }

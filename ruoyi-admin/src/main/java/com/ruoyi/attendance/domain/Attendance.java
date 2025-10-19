@@ -1,6 +1,8 @@
 package com.ruoyi.attendance.domain;
 
 import java.math.BigDecimal;
+import java.util.Date;
+
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 import com.ruoyi.common.annotation.Excel;
@@ -37,6 +39,28 @@ public class Attendance extends BaseEntity
     /** 缺勤天数 */
     @Excel(name = "缺勤天数")
     private Long absentDays;
+
+    /** 创建者 */
+    @Excel(name = "创建者")
+    private String createBy;
+
+    /** 创建时间 */
+    @Excel(name = "创建时间", width = 30, dateFormat = "yyyy-MM-dd HH:mm:ss")
+    private Date createTime;
+
+    /** 更新者 */
+    @Excel(name = "更新者")
+    private String updateBy;
+
+    /** 更新时间 */
+    @Excel(name = "更新时间", width = 30, dateFormat = "yyyy-MM-dd HH:mm:ss")
+    private Date updateTime;
+
+    /** 备注 */
+    @Excel(name = "备注")
+    private String remark;
+
+
 
     public void setRecordId(Long recordId)
     {
@@ -99,6 +123,54 @@ public class Attendance extends BaseEntity
     }
 
     @Override
+    public String getCreateBy() {
+        return createBy;
+    }
+
+    @Override
+    public void setCreateBy(String createBy) {
+        this.createBy = createBy;
+    }
+
+    @Override
+    public Date getCreateTime() {
+        return createTime;
+    }
+
+    public void setCreateTime(Date createTime) {
+        this.createTime = createTime;
+    }
+
+    @Override
+    public String getUpdateBy() {
+        return updateBy;
+    }
+
+    @Override
+    public void setUpdateBy(String updateBy) {
+        this.updateBy = updateBy;
+    }
+
+    @Override
+    public Date getUpdateTime() {
+        return updateTime;
+    }
+
+    public void setUpdateTime(Date updateTime) {
+        this.updateTime = updateTime;
+    }
+
+    @Override
+    public String getRemark() {
+        return remark;
+    }
+
+    @Override
+    public void setRemark(String remark) {
+        this.remark = remark;
+    }
+
+    @Override
     public String toString() {
         return new ToStringBuilder(this,ToStringStyle.MULTI_LINE_STYLE)
                 .append("recordId", getRecordId())
@@ -107,6 +179,11 @@ public class Attendance extends BaseEntity
                 .append("overtimeTimes", getOvertimeTimes())
                 .append("attendBonus", getAttendBonus())
                 .append("absentDays", getAbsentDays())
+                .append("createBy", getCreateBy())
+                .append("createTime", getCreateTime())
+                .append("updateBy", getUpdateBy())
+                .append("updateTime", getUpdateTime())
+                .append("remark", getRemark())
                 .toString();
     }
 }

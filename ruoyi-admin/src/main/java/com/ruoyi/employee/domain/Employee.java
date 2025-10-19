@@ -40,7 +40,7 @@ public class Employee extends BaseEntity {
      */
     @Excel(name = "职工年龄")
     @NotNull(message = "职工年龄不能为空")
-    @Min(value = 0, message = "年龄不能小于0")
+    @Min(value = 18, message = "年龄不能小于18")
     @Max(value = 150, message = "年龄不能大于150")
     private Long empAge;
 

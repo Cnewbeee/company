@@ -1,6 +1,7 @@
 package com.ruoyi.attendance.mapper;
 
 import java.util.List;
+
 import com.ruoyi.attendance.domain.Attendance;
 
 /**
@@ -9,8 +10,7 @@ import com.ruoyi.attendance.domain.Attendance;
  * @author ruoyi
  * @date 2025-10-11
  */
-public interface AttendanceMapper
-{
+public interface AttendanceMapper {
     /**
      * 查询员工考勤信息
      *
@@ -74,4 +74,12 @@ public interface AttendanceMapper
      * @return 结果
      */
     public int deleteAttendanceByEmpIds(Long[] empIds);
+
+    /**
+     * 删除员工考勤信息
+     *
+     * @param recordIds 记录编号
+     * @return 结果
+     */
+    public int deleteAttendanceByRecordIds(Long[] recordIds);
 }

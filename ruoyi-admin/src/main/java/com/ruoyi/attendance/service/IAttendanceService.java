@@ -70,7 +70,15 @@ public interface IAttendanceService
     /**
      * 删除员工考勤信息信息
      *
-     * @param recordId 记录编号
+     * @param recordIds 记录编号
+     * @return 结果
+     */
+    public int deleteAttendanceByRecordIds(Long[] recordIds);
+
+    /**
+     * 删除员工考勤信息信息
+     *
+     * @param recordId 员工考勤信息主键
      * @return 结果
      */
     public int deleteAttendanceByRecordId(Long recordId);

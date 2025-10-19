@@ -142,17 +142,29 @@ public class AttendanceServiceImpl implements IAttendanceService
     {
         return attendanceMapper.deleteAttendanceByEmpId(empId);
     }
-
     /**
      * 删除员工考勤信息信息
      *
-     * @param recordId 记录编号
+     * @param recordId 员工考勤信息主键
      * @return 结果
      */
     @Override
     public int deleteAttendanceByRecordId(Long recordId)
     {
-        return attendanceMapper.deleteAttendanceByRecordId(recordId);
+        return attendanceMapper.deleteAttendanceByEmpId(recordId);
+    }
+
+    /**
+     * 删除员工考勤信息信息
+     *
+     * @param recordIds 记录编号
+     * @return 结果
+     */
+
+    @Override
+    public int deleteAttendanceByRecordIds(Long[] recordIds)
+    {
+        return attendanceMapper.deleteAttendanceByRecordIds(recordIds);
     }
 
     /**

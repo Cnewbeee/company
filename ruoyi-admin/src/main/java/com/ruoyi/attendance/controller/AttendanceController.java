@@ -85,7 +85,7 @@ public class AttendanceController extends BaseController
      */
     @PreAuthorize("@ss.hasPermi('attendance:attendance:add')")
     @Log(title = "员工考勤信息", businessType = BusinessType.INSERT)
-    @PostMapping
+    @PostMapping(value = "/add")
     public AjaxResult add(@RequestBody Attendance attendance)
     {
         return toAjax(attendanceService.insertAttendance(attendance));
@@ -96,7 +96,7 @@ public class AttendanceController extends BaseController
      */
     @PreAuthorize("@ss.hasPermi('attendance:attendance:edit')")
     @Log(title = "员工考勤信息", businessType = BusinessType.UPDATE)
-    @PutMapping
+    @PutMapping(value = "/update")
     public AjaxResult edit(@RequestBody Attendance attendance)
     {
         return toAjax(attendanceService.updateAttendance(attendance));
@@ -111,16 +111,16 @@ public class AttendanceController extends BaseController
     public AjaxResult remove(@PathVariable Long[] empIds)
     {
         return toAjax(attendanceService.deleteAttendanceByEmpIds(empIds));
-    }
+}
 
     /**
      * 删除员工考勤信息（通过记录编号）
      */
     @PreAuthorize("@ss.hasPermi('attendance:attendance:remove')")
     @Log(title = "员工考勤信息", businessType = BusinessType.DELETE)
-    @DeleteMapping("/record/{recordId}")
-    public AjaxResult removeByRecordId(@PathVariable Long recordId)
+    @DeleteMapping("/record/{recordIds}")
+    public AjaxResult removeByRecordIds(@PathVariable Long[] recordIds)
     {
-        return toAjax(attendanceService.deleteAttendanceByRecordId(recordId));
+        return toAjax(attendanceService.deleteAttendanceByRecordIds(recordIds));
     }
 }

@@ -5,6 +5,8 @@ import org.apache.commons.lang3.builder.ToStringStyle;
 import com.ruoyi.common.annotation.Excel;
 import com.ruoyi.common.core.domain.BaseEntity;
 
+import javax.validation.constraints.Pattern;
+
 /**
  * 部门信息对象 department
  * 
@@ -28,6 +30,7 @@ public class Department extends BaseEntity
 
     /** 部门联系电话 */
     @Excel(name = "部门联系电话")
+    @Pattern(regexp = "^1[3-9]\\d{9}$", message = "电话号码格式不正确")
     private String deptPhone;
 
     public void setDeptId(Long deptId) 
