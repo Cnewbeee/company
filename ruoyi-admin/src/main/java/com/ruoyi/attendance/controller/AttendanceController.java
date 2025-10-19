@@ -1,7 +1,6 @@
 package com.ruoyi.attendance.controller;
 
 import java.util.List;
-import javax.servlet.http.HttpServletResponse;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -21,9 +20,11 @@ import com.ruoyi.attendance.service.IAttendanceService;
 import com.ruoyi.common.utils.poi.ExcelUtil;
 import com.ruoyi.common.core.page.TableDataInfo;
 
+import javax.servlet.http.HttpServletResponse;
+
 /**
  * 员工考勤信息Controller
- * 
+ *
  * @author ruoyi
  * @date 2025-10-11
  */
@@ -70,6 +71,16 @@ public class AttendanceController extends BaseController
     }
 
     /**
+     * 获取员工考勤信息详细信息（通过记录编号）
+     */
+    @PreAuthorize("@ss.hasPermi('attendance:attendance:query')")
+    @GetMapping(value = "/record/{recordId}")
+    public AjaxResult getInfoByRecordId(@PathVariable("recordId") Long recordId)
+    {
+        return success(attendanceService.selectAttendanceByRecordId(recordId));
+    }
+
+    /**
      * 新增员工考勤信息
      */
     @PreAuthorize("@ss.hasPermi('attendance:attendance:add')")
@@ -96,9 +107,20 @@ public class AttendanceController extends BaseController
      */
     @PreAuthorize("@ss.hasPermi('attendance:attendance:remove')")
     @Log(title = "员工考勤信息", businessType = BusinessType.DELETE)
-	@DeleteMapping("/{empIds}")
+    @DeleteMapping("/{empIds}")
     public AjaxResult remove(@PathVariable Long[] empIds)
     {
         return toAjax(attendanceService.deleteAttendanceByEmpIds(empIds));
+    }
+
+    /**
+     * 删除员工考勤信息（通过记录编号）
+     */
+    @PreAuthorize("@ss.hasPermi('attendance:attendance:remove')")
+    @Log(title = "员工考勤信息", businessType = BusinessType.DELETE)
+    @DeleteMapping("/record/{recordId}")
+    public AjaxResult removeByRecordId(@PathVariable Long recordId)
+    {
+        return toAjax(attendanceService.deleteAttendanceByRecordId(recordId));
     }
 }

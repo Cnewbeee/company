@@ -23,7 +23,7 @@ import com.ruoyi.common.core.page.TableDataInfo;
 
 /**
  * 员工工资信息Controller
- * 
+ *
  * @author ruoyi
  * @date 2025-10-11
  */
@@ -63,10 +63,20 @@ public class SalaryinfoController extends BaseController
      * 获取员工工资信息详细信息
      */
     @PreAuthorize("@ss.hasPermi('salaryinfo:salaryinfo:query')")
-    @GetMapping(value = "/{empId}")
-    public AjaxResult getInfo(@PathVariable("empId") Long empId)
+    @GetMapping(value = "/emp/{empId}")
+    public AjaxResult getInfoByEmpId(@PathVariable("empId") Long empId)
     {
         return success(salaryinfoService.selectSalaryinfoByEmpId(empId));
+    }
+
+    /**
+     * 获取员工工资信息详细信息
+     */
+    @PreAuthorize("@ss.hasPermi('salaryinfo:salaryinfo:query')")
+    @GetMapping(value = "/{recordId}")
+    public AjaxResult getInfoByRecordId(@PathVariable("recordId") Long recordId)
+    {
+        return success(salaryinfoService.selectSalaryinfoByRecordId(recordId));
     }
 
     /**
@@ -96,9 +106,20 @@ public class SalaryinfoController extends BaseController
      */
     @PreAuthorize("@ss.hasPermi('salaryinfo:salaryinfo:remove')")
     @Log(title = "员工工资信息", businessType = BusinessType.DELETE)
-	@DeleteMapping("/{empIds}")
-    public AjaxResult remove(@PathVariable Long[] empIds)
+    @DeleteMapping("/emp/{empIds}")
+    public AjaxResult removeByEmpIds(@PathVariable Long[] empIds)
     {
         return toAjax(salaryinfoService.deleteSalaryinfoByEmpIds(empIds));
+    }
+
+    /**
+     * 删除员工工资信息
+     */
+    @PreAuthorize("@ss.hasPermi('salaryinfo:salaryinfo:remove')")
+    @Log(title = "员工工资信息", businessType = BusinessType.DELETE)
+    @DeleteMapping("/{recordIds}")
+    public AjaxResult removeByRecordIds(@PathVariable Long[] recordIds)
+    {
+        return toAjax(salaryinfoService.deleteSalaryinfoByRecordIds(recordIds));
     }
 }

@@ -1,67 +1,119 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper
-PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
-"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.ruoyi.attendance.mapper.AttendanceMapper">
-    
+
     <resultMap type="Attendance" id="AttendanceResult">
-        <result property="empId"    column="emp_id"    />
-        <result property="attendDays"    column="attend_days"    />
-        <result property="overtimeTimes"    column="overtime_times"    />
-        <result property="attendBonus"    column="attend_bonus"    />
+        <result property="recordId" column="record_id"/>
+        <result property="empId" column="emp_id"/>
+        <result property="attendDays" column="attend_days"/>
+        <result property="overtimeTimes" column="overtime_times"/>
+        <result property="attendBonus" column="attend_bonus"/>
+        <result property="absentDays" column="absent_days"/>
+        <result property="createBy" column="create_by"/>
+        <result property="createTime" column="create_time"/>
+        <result property="updateBy" column="update_by"/>
+        <result property="updateTime" column="update_time"/>
+        <result property="remark" column="remark"/>
     </resultMap>
 
     <sql id="selectAttendanceVo">
-        select emp_id, attend_days, overtime_times, attend_bonus from attendance
+        select record_id,
+               emp_id,
+               attend_days,
+               overtime_times,
+               attend_bonus,
+               absent_days,
+               create_by,
+               create_time,
+               update_by,
+               update_time,
+               remark
+        from attendance
     </sql>
 
     <select id="selectAttendanceList" parameterType="Attendance" resultMap="AttendanceResult">
         <include refid="selectAttendanceVo"/>
-        <where>  
-            <if test="empId != null "> and emp_id = #{empId}</if>
-            <if test="attendDays != null "> and attend_days = #{attendDays}</if>
-            <if test="overtimeTimes != null "> and overtime_times = #{overtimeTimes}</if>
-            <if test="attendBonus != null "> and attend_bonus = #{attendBonus}</if>
+        <where>
+            <if test="recordId != null ">and record_id = #{recordId}</if>
+            <if test="empId != null ">and emp_id = #{empId}</if>
+            <if test="attendDays != null ">and attend_days = #{attendDays}</if>
+            <if test="overtimeTimes != null ">and overtime_times = #{overtimeTimes}</if>
+            <if test="attendBonus != null ">and attend_bonus = #{attendBonus}</if>
+            <if test="absentDays != null ">and absent_days = #{absentDays}</if>
         </where>
     </select>
-    
+
     <select id="selectAttendanceByEmpId" parameterType="Long" resultMap="AttendanceResult">
         <include refid="selectAttendanceVo"/>
         where emp_id = #{empId}
     </select>
 
+    <select id="selectAttendanceByRecordId" parameterType="Long" resultMap="AttendanceResult">
+        <include refid="selectAttendanceVo"/>
+        where record_id = #{recordId}
+    </select>
+
     <insert id="insertAttendance" parameterType="Attendance">
         insert into attendance
         <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="recordId != null">record_id,</if>
             <if test="empId != null">emp_id,</if>
             <if test="attendDays != null">attend_days,</if>
             <if test="overtimeTimes != null">overtime_times,</if>
             <if test="attendBonus != null">attend_bonus,</if>
-         </trim>
+            <if test="absentDays != null">absent_days,</if>
+            <if test="createBy != null and createBy != ''">create_by,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateBy != null and updateBy != ''">update_by,</if>
+            <if test="updateTime != null">update_time,</if>
+            <if test="remark != null and remark != ''">remark,</if>
+        </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="recordId != null">#{recordId},</if>
             <if test="empId != null">#{empId},</if>
             <if test="attendDays != null">#{attendDays},</if>
             <if test="overtimeTimes != null">#{overtimeTimes},</if>
             <if test="attendBonus != null">#{attendBonus},</if>
-         </trim>
+            <if test="absentDays != null">#{absentDays},</if>
+            <if test="createBy != null and createBy != ''">#{createBy},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateBy != null and updateBy != ''">#{updateBy},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+            <if test="remark != null and remark != ''">#{remark},</if>
+        </trim>
     </insert>
 
     <update id="updateAttendance" parameterType="Attendance">
         update attendance
         <trim prefix="SET" suffixOverrides=",">
+            <if test="empId != null">emp_id = #{empId},</if>
             <if test="attendDays != null">attend_days = #{attendDays},</if>
             <if test="overtimeTimes != null">overtime_times = #{overtimeTimes},</if>
             <if test="attendBonus != null">attend_bonus = #{attendBonus},</if>
+            <if test="absentDays != null">absent_days = #{absentDays},</if>
+            <if test="updateBy != null and updateBy != ''">update_by = #{updateBy},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+            <if test="remark != null and remark != ''">remark = #{remark},</if>
         </trim>
-        where emp_id = #{empId}
+        where record_id = #{recordId}
     </update>
 
     <delete id="deleteAttendanceByEmpId" parameterType="Long">
-        delete from attendance where emp_id = #{empId}
+        delete
+        from attendance
+        where emp_id = #{empId}
+    </delete>
+
+    <delete id="deleteAttendanceByRecordId" parameterType="Long">
+        delete
+        from attendance
+        where record_id = #{recordId}
     </delete>
 
     <delete id="deleteAttendanceByEmpIds" parameterType="String">
-        delete from attendance where emp_id in 
+        delete from attendance where emp_id in
         <foreach item="empId" collection="array" open="(" separator="," close=")">
             #{empId}
         </foreach>

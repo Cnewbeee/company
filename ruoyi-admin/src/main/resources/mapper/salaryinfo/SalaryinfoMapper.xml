@@ -1,72 +1,142 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper
-PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
-"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.ruoyi.salaryinfo.mapper.SalaryinfoMapper">
-    
+
     <resultMap type="Salaryinfo" id="SalaryinfoResult">
-        <result property="empId"    column="emp_id"    />
-        <result property="payableSalary"    column="payable_salary"    />
-        <result property="deductionSalary"    column="deduction_salary"    />
-        <result property="empName"    column="emp_name"    />
-        <result property="actualSalary"    column="actual_salary"    />
+        <result property="recordId" column="record_id"/>
+        <result property="empId" column="emp_id"/>
+        <result property="payableSalary" column="payable_salary"/>
+        <result property="attendanceBonus" column="attendance_bonus"/>
+        <result property="empName" column="emp_name"/>
+        <result property="actualSalary" column="actual_salary"/>
+        <result property="otherBonusPenalty" column="other_bonus_penalty"/>
+        <result property="bonusPenaltyRemark" column="bonus_penalty_remark"/>
+        <result property="createBy" column="create_by"/>
+        <result property="createTime" column="create_time"/>
+        <result property="updateBy" column="update_by"/>
+        <result property="updateTime" column="update_time"/>
+        <result property="remark" column="remark"/>
     </resultMap>
 
     <sql id="selectSalaryinfoVo">
-        select emp_id, payable_salary, deduction_salary, emp_name, actual_salary from salaryinfo
+        select record_id,
+               emp_id,
+               payable_salary,
+               attendance_bonus,
+               emp_name,
+               actual_salary,
+               other_bonus_penalty,
+               bonus_penalty_remark,
+               create_by,
+               create_time,
+               update_by,
+               update_time,
+               remark
+        from salaryinfo
     </sql>
 
     <select id="selectSalaryinfoList" parameterType="Salaryinfo" resultMap="SalaryinfoResult">
         <include refid="selectSalaryinfoVo"/>
-        <where>  
-            <if test="empId != null "> and emp_id = #{empId}</if>
-            <if test="payableSalary != null "> and payable_salary = #{payableSalary}</if>
-            <if test="deductionSalary != null "> and deduction_salary = #{deductionSalary}</if>
-            <if test="empName != null  and empName != ''"> and emp_name like concat('%', #{empName}, '%')</if>
-            <if test="actualSalary != null "> and actual_salary = #{actualSalary}</if>
+        <where>
+            <if test="recordId != null ">and record_id = #{recordId}</if>
+            <if test="empId != null ">and emp_id = #{empId}</if>
+            <if test="payableSalary != null ">and payable_salary = #{payableSalary}</if>
+            <if test="attendanceBonus != null ">and attendance_bonus = #{attendanceBonus}</if>
+            <if test="empName != null  and empName != ''">and emp_name like concat('%', #{empName}, '%')</if>
+            <if test="actualSalary != null ">and actual_salary = #{actualSalary}</if>
+            <if test="otherBonusPenalty != null ">and other_bonus_penalty = #{otherBonusPenalty}</if>
+            <if test="bonusPenaltyRemark != null  and bonusPenaltyRemark != ''">and bonus_penalty_remark like
+                concat('%', #{bonusPenaltyRemark}, '%')
+            </if>
         </where>
     </select>
-    
+
     <select id="selectSalaryinfoByEmpId" parameterType="Long" resultMap="SalaryinfoResult">
         <include refid="selectSalaryinfoVo"/>
         where emp_id = #{empId}
     </select>
 
+    <select id="selectSalaryinfoByRecordId" parameterType="Long" resultMap="SalaryinfoResult">
+        <include refid="selectSalaryinfoVo"/>
+        where record_id = #{recordId}
+    </select>
+
     <insert id="insertSalaryinfo" parameterType="Salaryinfo">
         insert into salaryinfo
         <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="recordId != null">record_id,</if>
             <if test="empId != null">emp_id,</if>
             <if test="payableSalary != null">payable_salary,</if>
-            <if test="deductionSalary != null">deduction_salary,</if>
+            <if test="attendanceBonus != null">attendance_bonus,</if>
             <if test="empName != null and empName != ''">emp_name,</if>
             <if test="actualSalary != null">actual_salary,</if>
-         </trim>
+            <if test="otherBonusPenalty != null">other_bonus_penalty,</if>
+            <if test="bonusPenaltyRemark != null and bonusPenaltyRemark != ''">bonus_penalty_remark,</if>
+            <if test="createBy != null and createBy != ''">create_by,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateBy != null and updateBy != ''">update_by,</if>
+            <if test="updateTime != null">update_time,</if>
+            <if test="remark != null and remark != ''">remark,</if>
+        </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="recordId != null">#{recordId},</if>
             <if test="empId != null">#{empId},</if>
             <if test="payableSalary != null">#{payableSalary},</if>
-            <if test="deductionSalary != null">#{deductionSalary},</if>
+            <if test="attendanceBonus != null">#{attendanceBonus},</if>
             <if test="empName != null and empName != ''">#{empName},</if>
             <if test="actualSalary != null">#{actualSalary},</if>
-         </trim>
+            <if test="otherBonusPenalty != null">#{otherBonusPenalty},</if>
+            <if test="bonusPenaltyRemark != null and bonusPenaltyRemark != ''">#{bonusPenaltyRemark},</if>
+            <if test="createBy != null and createBy != ''">#{createBy},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateBy != null and updateBy != ''">#{updateBy},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+            <if test="remark != null and remark != ''">#{remark},</if>
+        </trim>
     </insert>
 
     <update id="updateSalaryinfo" parameterType="Salaryinfo">
         update salaryinfo
         <trim prefix="SET" suffixOverrides=",">
+            <if test="empId != null">emp_id = #{empId},</if>
             <if test="payableSalary != null">payable_salary = #{payableSalary},</if>
-            <if test="deductionSalary != null">deduction_salary = #{deductionSalary},</if>
+            <if test="attendanceBonus != null">attendance_bonus = #{attendanceBonus},</if>
             <if test="empName != null and empName != ''">emp_name = #{empName},</if>
             <if test="actualSalary != null">actual_salary = #{actualSalary},</if>
+            <if test="otherBonusPenalty != null">other_bonus_penalty = #{otherBonusPenalty},</if>
+            <if test="bonusPenaltyRemark != null and bonusPenaltyRemark != ''">bonus_penalty_remark =
+                #{bonusPenaltyRemark},
+            </if>
+            <if test="updateBy != null and updateBy != ''">update_by = #{updateBy},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+            <if test="remark != null and remark != ''">remark = #{remark},</if>
         </trim>
-        where emp_id = #{empId}
+        where record_id = #{recordId}
     </update>
 
+    <delete id="deleteSalaryinfoByRecordId" parameterType="Long">
+        delete
+        from salaryinfo
+        where record_id = #{recordId}
+    </delete>
+
     <delete id="deleteSalaryinfoByEmpId" parameterType="Long">
-        delete from salaryinfo where emp_id = #{empId}
+        delete
+        from salaryinfo
+        where emp_id = #{empId}
+    </delete>
+
+    <delete id="deleteSalaryinfoByRecordIds" parameterType="String">
+        delete from salaryinfo where record_id in
+        <foreach item="recordId" collection="array" open="(" separator="," close=")">
+            #{recordId}
+        </foreach>
     </delete>
 
     <delete id="deleteSalaryinfoByEmpIds" parameterType="String">
-        delete from salaryinfo where emp_id in 
+        delete from salaryinfo where emp_id in
         <foreach item="empId" collection="array" open="(" separator="," close=")">
             #{empId}
         </foreach>

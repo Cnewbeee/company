@@ -8,13 +8,16 @@ import com.ruoyi.common.core.domain.BaseEntity;
 
 /**
  * 员工考勤信息对象 attendance
- * 
+ *
  * @author ruoyi
  * @date 2025-10-11
  */
 public class Attendance extends BaseEntity
 {
     private static final long serialVersionUID = 1L;
+
+    /** 记录编号（主键） */
+    private Long recordId;
 
     /** 职工编号（关联员工） */
     private Long empId;
@@ -31,53 +34,79 @@ public class Attendance extends BaseEntity
     @Excel(name = "出勤奖金")
     private BigDecimal attendBonus;
 
-    public void setEmpId(Long empId) 
+    /** 缺勤天数 */
+    @Excel(name = "缺勤天数")
+    private Long absentDays;
+
+    public void setRecordId(Long recordId)
+    {
+        this.recordId = recordId;
+    }
+
+    public Long getRecordId()
+    {
+        return recordId;
+    }
+
+    public void setEmpId(Long empId)
     {
         this.empId = empId;
     }
 
-    public Long getEmpId() 
+    public Long getEmpId()
     {
         return empId;
     }
 
-    public void setAttendDays(Long attendDays) 
+    public void setAttendDays(Long attendDays)
     {
         this.attendDays = attendDays;
     }
 
-    public Long getAttendDays() 
+    public Long getAttendDays()
     {
         return attendDays;
     }
 
-    public void setOvertimeTimes(Long overtimeTimes) 
+    public void setOvertimeTimes(Long overtimeTimes)
     {
         this.overtimeTimes = overtimeTimes;
     }
 
-    public Long getOvertimeTimes() 
+    public Long getOvertimeTimes()
     {
         return overtimeTimes;
     }
 
-    public void setAttendBonus(BigDecimal attendBonus) 
+    public void setAttendBonus(BigDecimal attendBonus)
     {
         this.attendBonus = attendBonus;
     }
 
-    public BigDecimal getAttendBonus() 
+    public BigDecimal getAttendBonus()
     {
         return attendBonus;
+    }
+
+    public void setAbsentDays(Long absentDays)
+    {
+        this.absentDays = absentDays;
+    }
+
+    public Long getAbsentDays()
+    {
+        return absentDays;
     }
 
     @Override
     public String toString() {
         return new ToStringBuilder(this,ToStringStyle.MULTI_LINE_STYLE)
-            .append("empId", getEmpId())
-            .append("attendDays", getAttendDays())
-            .append("overtimeTimes", getOvertimeTimes())
-            .append("attendBonus", getAttendBonus())
-            .toString();
+                .append("recordId", getRecordId())
+                .append("empId", getEmpId())
+                .append("attendDays", getAttendDays())
+                .append("overtimeTimes", getOvertimeTimes())
+                .append("attendBonus", getAttendBonus())
+                .append("absentDays", getAbsentDays())
+                .toString();
     }
 }

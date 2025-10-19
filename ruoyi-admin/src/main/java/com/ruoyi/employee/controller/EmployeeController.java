@@ -2,6 +2,11 @@ package com.ruoyi.employee.controller;
 
 import java.util.List;
 import javax.servlet.http.HttpServletResponse;
+import javax.validation.Valid;
+
+import com.ruoyi.common.exception.ServiceException;
+import com.ruoyi.jobposition.domain.Jobposition;
+import com.ruoyi.jobposition.service.IJobpositionService;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -33,6 +38,9 @@ public class EmployeeController extends BaseController
 {
     @Autowired
     private IEmployeeService employeeService;
+
+    @Autowired
+    private IJobpositionService jobpositionService;
 
     /**
      * 查询员工基本信息列表
@@ -75,8 +83,16 @@ public class EmployeeController extends BaseController
     @PreAuthorize("@ss.hasPermi('employee:employee:add')")
     @Log(title = "员工基本信息", businessType = BusinessType.INSERT)
     @PostMapping
-    public AjaxResult add(@RequestBody Employee employee)
+    public AjaxResult add(@Valid @RequestBody Employee employee)
     {
+        // 验证员工部门和职位部门是否一致
+        if (employee.getDeptId() != null && employee.getPosId() != null) {
+            Jobposition jobposition = jobpositionService.selectJobpositionByPosId(employee.getPosId());
+            if (jobposition != null && !employee.getDeptId().equals(jobposition.getDeptId())) {
+                throw new ServiceException("员工部门与职位所属部门不一致，请重新选择");
+            }
+        }
+
         return toAjax(employeeService.insertEmployee(employee));
     }
 
@@ -86,7 +102,7 @@ public class EmployeeController extends BaseController
     @PreAuthorize("@ss.hasPermi('employee:employee:edit')")
     @Log(title = "员工基本信息", businessType = BusinessType.UPDATE)
     @PutMapping
-    public AjaxResult edit(@RequestBody Employee employee)
+    public AjaxResult edit(@Valid @RequestBody Employee employee)
     {
         return toAjax(employeeService.updateEmployee(employee));
     }
@@ -100,5 +116,16 @@ public class EmployeeController extends BaseController
     public AjaxResult remove(@PathVariable Long[] empIds)
     {
         return toAjax(employeeService.deleteEmployeeByEmpIds(empIds));
+    }
+
+    /**
+     * 修改员工离职状态
+     */
+    @PreAuthorize("@ss.hasPermi('employee:employee:edit')")
+    @Log(title = "员工基本信息", businessType = BusinessType.UPDATE)
+    @PutMapping("/status")
+    public AjaxResult changeStatus(@RequestBody Employee employee)
+    {
+        return toAjax(employeeService.updateEmployee(employee));
     }
 }
