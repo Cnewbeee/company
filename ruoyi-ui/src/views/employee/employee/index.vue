@@ -76,6 +76,17 @@
           />
         </el-select>
       </el-form-item>
+      <el-form-item label="是否离职" prop="isLeave">
+        <el-select
+          v-model="queryParams.isLeave"
+          placeholder="请选择是否离职"
+          clearable
+          @change="handleQuery"
+        >
+          <el-option label="在职" :value="false" />
+          <el-option label="离职" :value="true" />
+        </el-select>
+      </el-form-item>
       <el-form-item>
         <el-button type="primary" icon="el-icon-search" size="mini" @click="handleQuery">搜索</el-button>
         <el-button icon="el-icon-refresh" size="mini" @click="resetQuery">重置</el-button>
@@ -137,6 +148,7 @@
       <el-table-column label="职工电话" align="center" prop="empPhone" />
       <el-table-column label="所在部门" align="center" prop="deptId" :formatter="formatDeptName" />
       <el-table-column label="担任职位" align="center" prop="posId" :formatter="formatPosName" />
+      <el-table-column label="是否离职" align="center" prop="isLeave" :formatter="formatIsLeave" />
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
         <template slot-scope="scope">
           <el-button
@@ -203,6 +215,12 @@
             />
           </el-select>
         </el-form-item>
+        <el-form-item label="是否离职" prop="isLeave">
+          <el-select v-model="form.isLeave" placeholder="请选择是否离职" clearable>
+            <el-option label="在职" :value="false" />
+            <el-option label="离职" :value="true" />
+          </el-select>
+        </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button type="primary" @click="submitForm">确 定</el-button>
@@ -254,10 +272,20 @@ export default {
         empAge: null,
         empPhone: null,
         deptId: null,
-        posId: null
+        posId: null,
+        isLeave: null
       },
       // 表单参数
-      form: {},
+      form: {
+        empId: null,
+        empName: null,
+        empGender: null,
+        empAge: null,
+        empPhone: null,
+        deptId: null,
+        posId: null,
+        isLeave: null
+      },
       // 表单校验
       rules: {
         empName: [
@@ -300,6 +328,12 @@ export default {
       const pos = this.posOptions.find(item => item.posId === row.posId)
       return pos ? pos.posName : row.posId
     },
+    // 是否离职格式化
+    formatIsLeave(row) {
+      if (row.isLeave === true) return '离职'
+      if (row.isLeave === false) return '在职'
+      return ''
+    },
     /** 查询员工基本信息列表 */
     getList() {
       this.loading = true
@@ -323,7 +357,8 @@ export default {
         empAge: null,
         empPhone: null,
         deptId: null,
-        posId: null
+        posId: null,
+        isLeave: null
       }
       this.resetForm("form")
     },
@@ -399,9 +434,3 @@ export default {
   }
 }
 </script>
-<!-- 取消员工工资信息的级联删除。
-     员工信息表添加字段“是否离职”。
-     新建员工时检测员工部门和职位部门是否一致，不一致则提示错误信息。
-     员工工资信息表添加主键“记录编号”，添加字段“其他奖金或处罚”默认为0、“奖惩说明”默认为空，字段“应扣工资”改名为“出勤奖金”,根据应发工资和出勤奖金计算实发工资,应发工资=基本工资+职务补贴。
-     员工考勤信息表添加主键“记录编号”和员工工资信息表的主键相同，添加字段"缺勤天数"，根据缺勤天数计算出勤奖金=“1000 - 缺勤天数 * 100” ,添加考勤信息时，顺便添加工资信息。
-     -->

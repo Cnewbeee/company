@@ -33,6 +33,14 @@
           @keyup.enter.native="handleQuery"
         />
       </el-form-item>
+      <el-form-item label="缺勤天数" prop="absentDays">
+        <el-input
+          v-model="queryParams.absentDays"
+          placeholder="请输入缺勤天数"
+          clearable
+          @keyup.enter.native="handleQuery"
+        />
+      </el-form-item>
       <el-form-item>
         <el-button type="primary" icon="el-icon-search" size="mini" @click="handleQuery">搜索</el-button>
         <el-button icon="el-icon-refresh" size="mini" @click="resetQuery">重置</el-button>
@@ -88,9 +96,20 @@
     <el-table v-loading="loading" :data="attendanceList" @selection-change="handleSelectionChange">
       <el-table-column type="selection" width="55" align="center" />
       <el-table-column label="职工编号" align="center" prop="empId" />
-      <el-table-column label="月出勤天数" align="center" prop="attendDays" />
-      <el-table-column label="月加班次数" align="center" prop="overtimeTimes" />
-      <el-table-column label="出勤奖金" align="center" prop="attendBonus" />
+  <el-table-column label="月出勤天数" align="center" prop="attendDays" />
+  <el-table-column label="月加班次数" align="center" prop="overtimeTimes" />
+  <el-table-column label="出勤奖金" align="center" prop="attendBonus" />
+  <el-table-column label="缺勤天数" align="center" prop="absentDays" />
+        <el-table-column label="创建/更新者" align="center">
+          <template slot-scope="scope">
+            {{ scope.row.updateBy ? scope.row.updateBy : scope.row.createBy }}
+          </template>
+        </el-table-column>
+        <el-table-column label="创建/更新时间" align="center">
+          <template slot-scope="scope">
+            {{ formatDateTime(scope.row.updateTime ? scope.row.updateTime : scope.row.createTime) }}
+          </template>
+        </el-table-column>
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
         <template slot-scope="scope">
           <el-button
@@ -122,14 +141,20 @@
     <!-- 添加或修改员工考勤信息对话框 -->
     <el-dialog :title="title" :visible.sync="open" width="500px" append-to-body>
       <el-form ref="form" :model="form" :rules="rules" label-width="80px">
+        <el-form-item label="职工编号" prop="empId">
+          <el-input v-model="form.empId" placeholder="请输入职工编号" />
+        </el-form-item>
         <el-form-item label="月出勤天数" prop="attendDays">
           <el-input v-model="form.attendDays" placeholder="请输入月出勤天数" />
         </el-form-item>
         <el-form-item label="月加班次数" prop="overtimeTimes">
           <el-input v-model="form.overtimeTimes" placeholder="请输入月加班次数" />
         </el-form-item>
+        <el-form-item label="缺勤天数" prop="absentDays">
+          <el-input v-model="form.absentDays" placeholder="请输入缺勤天数" />
+        </el-form-item>
         <el-form-item label="出勤奖金" prop="attendBonus">
-          <el-input v-model="form.attendBonus" placeholder="请输入出勤奖金" />
+          <el-input v-model="form.attendBonus" placeholder="出勤奖金由系统自动计算" :disabled="true" />
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
@@ -141,6 +166,13 @@
 </template>
 
 <script>
+// 时间格式化工具
+function formatDateTime(val) {
+  if (!val) return ''
+  const date = new Date(val)
+  const pad = n => n < 10 ? '0' + n : n
+  return `${date.getFullYear()}-${pad(date.getMonth()+1)}-${pad(date.getDate())} ${pad(date.getHours())}:${pad(date.getMinutes())}:${pad(date.getSeconds())}`
+}
 import { listAttendance, getAttendance, delAttendance, addAttendance, updateAttendance } from "@/api/attendance/attendance"
 
 export default {
@@ -172,18 +204,32 @@ export default {
         empId: null,
         attendDays: null,
         overtimeTimes: null,
-        attendBonus: null
+        attendBonus: null,
+        absentDays: null
       },
       // 表单参数
-      form: {},
+      form: {
+        recordId: null,
+        empId: null,
+        attendDays: null,
+        overtimeTimes: null,
+        attendBonus: null,
+        absentDays: null
+      },
       // 表单校验
       rules: {
+        empId: [
+          { required: true, message: "职工编号不能为空", trigger: "blur" }
+        ],
         attendDays: [
           { required: true, message: "月出勤天数不能为空", trigger: "blur" }
         ],
         overtimeTimes: [
           { required: true, message: "月加班次数不能为空", trigger: "blur" }
         ],
+        absentDays: [
+          { required: true, message: "缺勤天数不能为空", trigger: "blur" }
+        ]
       }
     }
   },
@@ -208,10 +254,12 @@ export default {
     // 表单重置
     reset() {
       this.form = {
+        recordId: null,
         empId: null,
         attendDays: null,
         overtimeTimes: null,
-        attendBonus: null
+        attendBonus: null,
+        absentDays: null
       }
       this.resetForm("form")
     },
@@ -227,7 +275,7 @@ export default {
     },
     // 多选框选中数据
     handleSelectionChange(selection) {
-      this.ids = selection.map(item => item.empId)
+      this.ids = selection.map(item => item.recordId)
       this.single = selection.length!==1
       this.multiple = !selection.length
     },
@@ -251,14 +299,16 @@ export default {
     submitForm() {
       this.$refs["form"].validate(valid => {
         if (valid) {
-          if (this.form.empId != null) {
+          if (this.form.recordId != null) {
             updateAttendance(this.form).then(response => {
+              console.log("11111")
               this.$modal.msgSuccess("修改成功")
               this.open = false
               this.getList()
             })
           } else {
             addAttendance(this.form).then(response => {
+              console.log("22222")
               this.$modal.msgSuccess("新增成功")
               this.open = false
               this.getList()
@@ -269,9 +319,10 @@ export default {
     },
     /** 删除按钮操作 */
     handleDelete(row) {
-      const empIds = row.empId || this.ids
-      this.$modal.confirm('是否确认删除员工考勤信息编号为"' + empIds + '"的数据项？').then(function() {
-        return delAttendance(empIds)
+      const recordIds = row.recordId || this.ids
+      console.log(recordIds)
+      this.$modal.confirm('是否确认删除员工考勤信息编号为"' + recordIds + '"的数据项？').then(function() {
+        return delAttendance(recordIds)
       }).then(() => {
         this.getList()
         this.$modal.msgSuccess("删除成功")
@@ -282,7 +333,8 @@ export default {
       this.download('attendance/attendance/export', {
         ...this.queryParams
       }, `attendance_${new Date().getTime()}.xlsx`)
-    }
+    },
+    formatDateTime,
   }
 }
 </script>

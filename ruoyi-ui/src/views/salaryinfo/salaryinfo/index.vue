@@ -9,6 +9,14 @@
           @keyup.enter.native="handleQuery"
         />
       </el-form-item>
+      <el-form-item label="记录编号" prop="recordId">
+        <el-input
+          v-model="queryParams.recordId"
+          placeholder="请输入记录编号"
+          clearable
+          @keyup.enter.native="handleQuery"
+        />
+      </el-form-item>
       <el-form-item label="应发工资" prop="payableSalary">
         <el-input
           v-model="queryParams.payableSalary"
@@ -17,10 +25,10 @@
           @keyup.enter.native="handleQuery"
         />
       </el-form-item>
-      <el-form-item label="应扣工资" prop="deductionSalary">
+      <el-form-item label="出勤奖金" prop="attendanceBonus">
         <el-input
-          v-model="queryParams.deductionSalary"
-          placeholder="请输入应扣工资"
+          v-model="queryParams.attendanceBonus"
+          placeholder="请输入出勤奖金"
           clearable
           @keyup.enter.native="handleQuery"
         />
@@ -95,11 +103,14 @@
 
     <el-table v-loading="loading" :data="salaryinfoList" @selection-change="handleSelectionChange">
       <el-table-column type="selection" width="55" align="center" />
-      <el-table-column label="职工编号" align="center" prop="empId" />
-      <el-table-column label="应发工资" align="center" prop="payableSalary" />
-      <el-table-column label="应扣工资" align="center" prop="deductionSalary" />
-      <el-table-column label="职工姓名" align="center" prop="empName" />
-      <el-table-column label="实发工资" align="center" prop="actualSalary" />
+  <el-table-column label="记录编号" align="center" prop="recordId" />
+  <el-table-column label="职工编号" align="center" prop="empId" />
+  <el-table-column label="应发工资" align="center" prop="payableSalary" />
+  <el-table-column label="出勤奖金" align="center" prop="attendanceBonus" />
+  <el-table-column label="其他奖金或处罚" align="center" prop="otherBonusPenalty" />
+  <el-table-column label="职工姓名" align="center" prop="empName" />
+  <el-table-column label="实发工资" align="center" prop="actualSalary" />
+  <el-table-column label="奖惩说明" align="center" prop="bonusPenaltyRemark" />
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
         <template slot-scope="scope">
           <el-button
@@ -131,17 +142,29 @@
     <!-- 添加或修改员工工资信息对话框 -->
     <el-dialog :title="title" :visible.sync="open" width="500px" append-to-body>
       <el-form ref="form" :model="form" :rules="rules" label-width="80px">
+        <el-form-item label="记录编号" prop="recordId">
+          <el-input v-model="form.recordId" placeholder="请输入记录编号" />
+        </el-form-item>
+        <el-form-item label="职工编号" prop="empId">
+          <el-input v-model="form.empId" placeholder="请输入职工编号" />
+        </el-form-item>
         <el-form-item label="应发工资" prop="payableSalary">
           <el-input v-model="form.payableSalary" placeholder="请输入应发工资" />
         </el-form-item>
-        <el-form-item label="应扣工资" prop="deductionSalary">
-          <el-input v-model="form.deductionSalary" placeholder="请输入应扣工资" />
+        <el-form-item label="出勤奖金" prop="attendanceBonus">
+          <el-input v-model="form.attendanceBonus" placeholder="请输入出勤奖金" />
+        </el-form-item>
+        <el-form-item label="其他奖金或处罚" prop="otherBonusPenalty">
+          <el-input v-model="form.otherBonusPenalty" placeholder="请输入其他奖金或处罚，默认为0" />
         </el-form-item>
         <el-form-item label="职工姓名" prop="empName">
           <el-input v-model="form.empName" placeholder="请输入职工姓名" />
         </el-form-item>
         <el-form-item label="实发工资" prop="actualSalary">
-          <el-input v-model="form.actualSalary" placeholder="请输入实发工资" />
+          <el-input v-model="form.actualSalary" placeholder="实发工资由系统自动计算" :disabled="true" />
+        </el-form-item>
+        <el-form-item label="奖惩说明" prop="bonusPenaltyRemark">
+          <el-input v-model="form.bonusPenaltyRemark" placeholder="请输入奖惩说明，默认为空" />
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
@@ -182,27 +205,42 @@ export default {
       queryParams: {
         pageNum: 1,
         pageSize: 10,
+        recordId: null,
         empId: null,
         payableSalary: null,
-        deductionSalary: null,
+        attendanceBonus: null,
+        otherBonusPenalty: null,
         empName: null,
-        actualSalary: null
+        actualSalary: null,
+        bonusPenaltyRemark: null
       },
       // 表单参数
-      form: {},
+      form: {
+        recordId: null,
+        empId: null,
+        payableSalary: null,
+        attendanceBonus: null,
+        otherBonusPenalty: 0,
+        empName: null,
+        actualSalary: null,
+        bonusPenaltyRemark: ''
+      },
       // 表单校验
       rules: {
+        recordId: [
+          { required: true, message: "记录编号不能为空", trigger: "blur" }
+        ],
+        empId: [
+          { required: true, message: "职工编号不能为空", trigger: "blur" }
+        ],
         payableSalary: [
           { required: true, message: "应发工资不能为空", trigger: "blur" }
         ],
-        deductionSalary: [
-          { required: true, message: "应扣工资不能为空", trigger: "blur" }
+        attendanceBonus: [
+          { required: true, message: "出勤奖金不能为空", trigger: "blur" }
         ],
         empName: [
           { required: true, message: "职工姓名不能为空", trigger: "blur" }
-        ],
-        actualSalary: [
-          { required: true, message: "实发工资不能为空", trigger: "blur" }
         ]
       }
     }
@@ -234,11 +272,14 @@ export default {
     // 表单重置
     reset() {
       this.form = {
+        recordId: null,
         empId: null,
         payableSalary: null,
-        deductionSalary: null,
+        attendanceBonus: null,
+        otherBonusPenalty: 0,
         empName: null,
-        actualSalary: null
+        actualSalary: null,
+        bonusPenaltyRemark: ''
       }
       this.resetForm("form")
     },

@@ -20,7 +20,7 @@ export function getAttendance(empId) {
 // 新增员工考勤信息
 export function addAttendance(data) {
   return request({
-    url: '/attendance/attendance',
+    url: '/attendance/attendance/add',
     method: 'post',
     data: data
   })
@@ -29,16 +29,16 @@ export function addAttendance(data) {
 // 修改员工考勤信息
 export function updateAttendance(data) {
   return request({
-    url: '/attendance/attendance',
+    url: '/attendance/attendance/update',
     method: 'put',
     data: data
   })
 }
 
 // 删除员工考勤信息
-export function delAttendance(empId) {
+export function delAttendance(recordId) {
   return request({
-    url: '/attendance/attendance/' + empId,
+    url: '/attendance/attendance/record/' + recordId,
     method: 'delete'
   })
 }
