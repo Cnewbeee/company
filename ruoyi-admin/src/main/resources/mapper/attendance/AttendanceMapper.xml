@@ -115,14 +115,14 @@
     <delete id="deleteAttendanceByEmpIds" parameterType="String">
         delete from attendance where record_id in
         <foreach item="recordIds" collection="array" open="(" separator="," close=")">
-            #{recordId}
+            #{recordIds}
         </foreach>
     </delete>
 
     <delete id="deleteAttendanceByRecordIds" parameterType="String">
-        delete from attendance where emp_id in
+        delete from attendance where record_id in
         <foreach item="RecordIds" collection="array" open="(" separator="," close=")">
-            #{RecordId}
+            #{RecordIds}
         </foreach>
     </delete>
 </mapper>

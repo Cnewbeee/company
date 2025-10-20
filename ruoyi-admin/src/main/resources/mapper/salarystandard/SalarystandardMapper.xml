@@ -9,6 +9,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <result property="basicSalary"    column="basic_salary"    />
         <result property="salaryLevel"    column="salary_level"    />
         <result property="positionAllowance"    column="position_allowance"    />
+        <result property="salaryId"    column="salary_id"    />
     </resultMap>
 
     <sql id="selectSalarystandardVo">
@@ -17,11 +18,12 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 
     <select id="selectSalarystandardList" parameterType="Salarystandard" resultMap="SalarystandardResult">
         <include refid="selectSalarystandardVo"/>
-        <where>  
-            <if test="posId != null "> and pos_id = #{posId}</if>
-            <if test="basicSalary != null "> and basic_salary = #{basicSalary}</if>
-            <if test="salaryLevel != null  and salaryLevel != ''"> and salary_level = #{salaryLevel}</if>
-            <if test="positionAllowance != null "> and position_allowance = #{positionAllowance}</if>
+        <where>
+            <if test="salaryId != null ">and salary_id = #{salaryId}</if>
+            <if test="posId != null ">and pos_id = #{posId}</if>
+            <if test="basicSalary != null ">and basic_salary = #{basicSalary}</if>
+            <if test="salaryLevel != null  and salaryLevel != ''">and salary_level = #{salaryLevel}</if>
+            <if test="positionAllowance != null ">and position_allowance = #{positionAllowance}</if>
         </where>
     </select>
     
