@@ -1,5 +1,6 @@
 package com.ruoyi.salaryinfo.mapper;
 
+import java.math.BigDecimal;
 import java.util.List;
 import com.ruoyi.salaryinfo.domain.Salaryinfo;
 
@@ -82,4 +83,16 @@ public interface SalaryinfoMapper
      * @return 结果
      */
     public int deleteSalaryinfoByEmpIds(Long[] empIds);
+
+
+
+    /**
+     * 获取指定年份的部门员工工资信息
+     *
+     * @param formattedOneYearAgo 指定年份
+     * @return 部门员工工资信息列表
+     */
+    // 在 SalaryinfoMapper 接口中修改方法签名
+    BigDecimal getTotalSalaryByYear(String formattedOneYearAgo);
+
 }

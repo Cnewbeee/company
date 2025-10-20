@@ -1,17 +1,16 @@
 package com.ruoyi.salaryinfo.controller;
 
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 import javax.servlet.http.HttpServletResponse;
+
+import com.ruoyi.common.utils.DateUtils;
+import org.junit.Test;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import com.ruoyi.common.annotation.Log;
 import com.ruoyi.common.core.controller.BaseController;
 import com.ruoyi.common.core.domain.AjaxResult;
@@ -122,4 +121,26 @@ public class SalaryinfoController extends BaseController
     {
         return toAjax(salaryinfoService.deleteSalaryinfoByRecordIds(recordIds));
     }
+
+
+    /**
+     * 统计一年的员工工资
+     */
+     @PreAuthorize("@ss.hasPermi('salaryinfo:salaryinfo:query')")
+     @GetMapping("/total")
+     public AjaxResult getTotalSalaryByYear()
+     {
+
+         SimpleDateFormat excelDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+         Date currentDate = new Date();
+         Calendar calendar = Calendar.getInstance();
+         calendar.setTime(currentDate);
+         calendar.add(Calendar.YEAR, -1);
+         Date oneYearAgo = calendar.getTime();
+         String formattedOneYearAgo = excelDateFormat.format(oneYearAgo);
+
+         return success(salaryinfoService.getTotalSalaryByYear(formattedOneYearAgo));
+     }
+
+
 }

@@ -1,6 +1,8 @@
 package com.ruoyi.salaryinfo.domain;
 
 import java.math.BigDecimal;
+import java.util.Date;
+
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 import com.ruoyi.common.annotation.Excel;
@@ -45,6 +47,26 @@ public class Salaryinfo extends BaseEntity
     /** 奖惩说明（默认为空） */
     @Excel(name = "奖惩说明")
     private String bonusPenaltyRemark = "";
+
+    /**创建时间 */
+    @Excel(name = "创建时间", width = 30, dateFormat = "yyyy-MM-dd HH:mm:ss")
+    private Date createTime;
+
+
+    public void setCreateTime(Date createTime)
+    {
+        this.createTime = createTime;
+    }
+
+    public Date getCreateTime()
+    {
+        return createTime;
+    }
+
+    public Salaryinfo()
+    {
+    }
+
 
     public void setRecordId(Long recordId)
     {

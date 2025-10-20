@@ -141,4 +141,13 @@
             #{empId}
         </foreach>
     </delete>
+
+
+
+    <select id="getTotalSalaryByYear" parameterType="string" resultType="java.math.BigDecimal">
+        SELECT COALESCE(SUM(actual_salary), 0) FROM salaryinfo
+        WHERE create_time >= #{formattedOneYearAgo}
+    </select>
+
+
 </mapper>

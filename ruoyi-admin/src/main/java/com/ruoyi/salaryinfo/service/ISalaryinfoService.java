@@ -82,4 +82,13 @@ public interface ISalaryinfoService
      * @return 结果
      */
     public int deleteSalaryinfoByRecordId(Long recordId);
+
+
+    /**
+     * 统计一年的员工工资
+     *
+     * @param formattedOneYearAgo
+     * @return
+     */
+    String getTotalSalaryByYear(String formattedOneYearAgo);
 }

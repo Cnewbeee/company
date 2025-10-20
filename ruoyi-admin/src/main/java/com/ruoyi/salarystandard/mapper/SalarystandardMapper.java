@@ -1,5 +1,6 @@
 package com.ruoyi.salarystandard.mapper;
 
+import java.math.BigDecimal;
 import java.util.List;
 import com.ruoyi.salarystandard.domain.Salarystandard;
 
@@ -58,4 +59,5 @@ public interface SalarystandardMapper
      * @return 结果
      */
     public int deleteSalarystandardByPosIds(Long[] posIds);
+
 }

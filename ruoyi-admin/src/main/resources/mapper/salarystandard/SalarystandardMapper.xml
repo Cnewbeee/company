@@ -1,19 +1,20 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper
-PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
-"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.ruoyi.salarystandard.mapper.SalarystandardMapper">
-    
+
     <resultMap type="Salarystandard" id="SalarystandardResult">
-        <result property="posId"    column="pos_id"    />
-        <result property="basicSalary"    column="basic_salary"    />
-        <result property="salaryLevel"    column="salary_level"    />
-        <result property="positionAllowance"    column="position_allowance"    />
-        <result property="salaryId"    column="salary_id"    />
+        <result property="posId" column="pos_id"/>
+        <result property="basicSalary" column="basic_salary"/>
+        <result property="salaryLevel" column="salary_level"/>
+        <result property="positionAllowance" column="position_allowance"/>
+        <result property="salaryId" column="salary_id"/>
     </resultMap>
 
     <sql id="selectSalarystandardVo">
-        select pos_id, basic_salary, salary_level, position_allowance from salarystandard
+        select pos_id, basic_salary, salary_level, position_allowance
+        from salarystandard
     </sql>
 
     <select id="selectSalarystandardList" parameterType="Salarystandard" resultMap="SalarystandardResult">
@@ -26,31 +27,32 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="positionAllowance != null ">and position_allowance = #{positionAllowance}</if>
         </where>
     </select>
-    
+
     <select id="selectSalarystandardByPosId" parameterType="Long" resultMap="SalarystandardResult">
         <include refid="selectSalarystandardVo"/>
         where pos_id = #{posId}
     </select>
 
-    <insert id="insertSalarystandard" parameterType="Salarystandard">
+    <insert id="insertSalarystandard" parameterType="Salarystandard" keyProperty="posId">
         insert into salarystandard
         <trim prefix="(" suffix=")" suffixOverrides=",">
-            <if test="posId != null">pos_id,</if>
+            <if test="posId != null ">pos_id,</if>
             <if test="basicSalary != null">basic_salary,</if>
             <if test="salaryLevel != null">salary_level,</if>
             <if test="positionAllowance != null">position_allowance,</if>
-         </trim>
+        </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
-            <if test="posId != null">#{posId},</if>
+            <if test="posId != null ">#{posId},</if>
             <if test="basicSalary != null">#{basicSalary},</if>
             <if test="salaryLevel != null">#{salaryLevel},</if>
             <if test="positionAllowance != null">#{positionAllowance},</if>
-         </trim>
+        </trim>
     </insert>
 
     <update id="updateSalarystandard" parameterType="Salarystandard">
         update salarystandard
         <trim prefix="SET" suffixOverrides=",">
+            <if test="posId != null ">and pos_id = #{posId},</if>
             <if test="basicSalary != null">basic_salary = #{basicSalary},</if>
             <if test="salaryLevel != null">salary_level = #{salaryLevel},</if>
             <if test="positionAllowance != null">position_allowance = #{positionAllowance},</if>
@@ -59,7 +61,9 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </update>
 
     <delete id="deleteSalarystandardByPosId" parameterType="Long">
-        delete from salarystandard where salary_id = #{salary_id}
+        delete
+        from salarystandard
+        where salary_id = #{salary_id}
     </delete>
 
     <delete id="deleteSalarystandardByPosIds" parameterType="String">
@@ -68,4 +72,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             #{salary_id}
         </foreach>
     </delete>
+
+
+
 </mapper>

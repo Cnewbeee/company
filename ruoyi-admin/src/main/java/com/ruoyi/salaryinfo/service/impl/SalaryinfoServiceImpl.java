@@ -132,6 +132,13 @@ public class SalaryinfoServiceImpl implements ISalaryinfoService
         return salaryinfoMapper.deleteSalaryinfoByRecordId(recordId);
     }
 
+    @Override
+    public String getTotalSalaryByYear(String formattedOneYearAgo) {
+        BigDecimal totalSalary = salaryinfoMapper.getTotalSalaryByYear(formattedOneYearAgo);
+        return totalSalary != null ? totalSalary.toString() : "0";
+    }
+
+
     /**
      * 计算实发工资
      * 实发工资 = 应发工资 + 出勤奖金 + 其他奖金或处罚

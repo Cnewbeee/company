@@ -11,7 +11,7 @@
  Target Server Version : 80043 (8.0.43)
  File Encoding         : 65001
 
- Date: 20/10/2025 20:56:35
+ Date: 19/10/2025 12:01:00
 */
 
 SET NAMES utf8mb4;
@@ -53,11 +53,15 @@ CREATE TABLE `attendance`  (
   PRIMARY KEY (`record_id`) USING BTREE,
   INDEX `attendance_ibfk_1`(`emp_id` ASC) USING BTREE,
   CONSTRAINT `attendance_ibfk_1` FOREIGN KEY (`emp_id`) REFERENCES `employee` (`emp_id`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE = InnoDB AUTO_INCREMENT = 15 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci COMMENT = '员工考勤信息表' ROW_FORMAT = DYNAMIC;
+) ENGINE = InnoDB AUTO_INCREMENT = 11 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci COMMENT = '员工考勤信息表' ROW_FORMAT = DYNAMIC;
 
 -- ----------------------------
 -- Records of attendance
 -- ----------------------------
+INSERT INTO `attendance` VALUES (7, 1, 22, 5, 2, 800.00, '', NULL, '', NULL, NULL);
+INSERT INTO `attendance` VALUES (8, 2, 20, 3, 4, 600.00, '', NULL, '', NULL, NULL);
+INSERT INTO `attendance` VALUES (9, 1, 22, 5, 2, 800.00, '', NULL, '', NULL, NULL);
+INSERT INTO `attendance` VALUES (10, 2, 20, 3, 4, 600.00, '', NULL, '', NULL, NULL);
 
 -- ----------------------------
 -- Table structure for department
@@ -222,7 +226,7 @@ CREATE TABLE `jobposition`  (
   INDEX `dept_id`(`dept_id` ASC) USING BTREE,
   INDEX `idx_pos_name`(`pos_name` ASC) USING BTREE COMMENT '职位名称索引',
   CONSTRAINT `jobposition_ibfk_1` FOREIGN KEY (`dept_id`) REFERENCES `department` (`dept_id`) ON DELETE SET NULL ON UPDATE CASCADE
-) ENGINE = InnoDB AUTO_INCREMENT = 6 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci COMMENT = '职务信息表' ROW_FORMAT = DYNAMIC;
+) ENGINE = InnoDB AUTO_INCREMENT = 4 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci COMMENT = '职务信息表' ROW_FORMAT = DYNAMIC;
 
 -- ----------------------------
 -- Records of jobposition
@@ -468,39 +472,36 @@ CREATE TABLE `salaryinfo`  (
   `remark` varchar(500) CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci NULL DEFAULT NULL COMMENT '备注',
   PRIMARY KEY (`record_id`) USING BTREE,
   INDEX `idx_emp_id`(`emp_id` ASC) USING BTREE COMMENT '员工ID索引'
-) ENGINE = InnoDB AUTO_INCREMENT = 10 CHARACTER SET = utf8mb3 COLLATE = utf8mb3_general_ci COMMENT = '员工工资信息表' ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 6 CHARACTER SET = utf8mb3 COLLATE = utf8mb3_general_ci COMMENT = '员工工资信息表' ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of salaryinfo
 -- ----------------------------
+INSERT INTO `salaryinfo` VALUES (1, 1, 8000.00, 500.00, '张三', 8500.00, 0.00, '', 'admin', '2025-10-19 10:26:11', 'admin', '2025-10-19 10:26:11', '正式员工');
+INSERT INTO `salaryinfo` VALUES (2, 2, 6500.00, 300.00, '李四', 6800.00, 0.00, '', 'admin', '2025-10-19 10:26:11', 'admin', '2025-10-19 10:26:11', '试用期员工');
 INSERT INTO `salaryinfo` VALUES (3, 3, 9500.00, 800.00, '王五', 10300.00, 0.00, '', 'admin', '2025-10-19 10:26:11', 'admin', '2025-10-19 10:26:11', '管理层');
 INSERT INTO `salaryinfo` VALUES (4, 4, 7200.00, 400.00, '赵六', 7600.00, 0.00, '', 'admin', '2025-10-19 10:26:11', 'admin', '2025-10-19 10:26:11', '技术骨干');
 INSERT INTO `salaryinfo` VALUES (5, 5, 5800.00, 200.00, '钱七', 6000.00, 0.00, '', 'admin', '2025-10-19 10:26:11', 'admin', '2025-10-19 10:26:11', '新入职员工');
-INSERT INTO `salaryinfo` VALUES (6, 1, 12000.00, 800.00, '88', 12800.00, 0.00, '', '', NULL, '', NULL, NULL);
-INSERT INTO `salaryinfo` VALUES (7, 2, 12000.00, 500.00, '88888', 12500.00, 0.00, '', '', NULL, '', NULL, NULL);
-INSERT INTO `salaryinfo` VALUES (8, 1, 12000.00, 900.00, '88', 12900.00, 0.00, '', '', NULL, '', NULL, NULL);
-INSERT INTO `salaryinfo` VALUES (9, 1, 12000.00, 900.00, '88', 12900.00, 0.00, '', '', NULL, '', NULL, NULL);
 
 -- ----------------------------
 -- Table structure for salarystandard
 -- ----------------------------
 DROP TABLE IF EXISTS `salarystandard`;
 CREATE TABLE `salarystandard`  (
-  `salary_id` int NOT NULL AUTO_INCREMENT,
-  `pos_id` int NULL DEFAULT NULL,
+  `pos_id` int NOT NULL COMMENT '职位编号（关联职务）',
   `basic_salary` decimal(10, 2) NOT NULL COMMENT '基本工资',
   `salary_level` varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL DEFAULT NULL COMMENT '薪资等级',
   `position_allowance` decimal(10, 2) NULL DEFAULT NULL COMMENT '职务补贴',
-  PRIMARY KEY (`salary_id`) USING BTREE,
-  INDEX `fk_salarystandard_pos_id`(`pos_id` ASC) USING BTREE,
-  CONSTRAINT `fk_salarystandard_pos_id` FOREIGN KEY (`pos_id`) REFERENCES `jobposition` (`pos_id`) ON DELETE RESTRICT ON UPDATE RESTRICT
-) ENGINE = InnoDB AUTO_INCREMENT = 13 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci COMMENT = '工资标准表' ROW_FORMAT = DYNAMIC;
+  PRIMARY KEY (`pos_id`) USING BTREE,
+  CONSTRAINT `salarystandard_ibfk_1` FOREIGN KEY (`pos_id`) REFERENCES `jobposition` (`pos_id`) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci COMMENT = '工资标准表' ROW_FORMAT = DYNAMIC;
 
 -- ----------------------------
 -- Records of salarystandard
 -- ----------------------------
-INSERT INTO `salarystandard` VALUES (2, 2, 6000.00, 'B', 1000.00);
-INSERT INTO `salarystandard` VALUES (3, 3, 8000.00, 'A', 1500.00);
+INSERT INTO `salarystandard` VALUES (1, 10000.00, 'A', 2000.00);
+INSERT INTO `salarystandard` VALUES (2, 6000.00, 'B', 1000.00);
+INSERT INTO `salarystandard` VALUES (3, 8000.00, 'A', 1500.00);
 
 -- ----------------------------
 -- Table structure for sys_config
@@ -697,7 +698,7 @@ CREATE TABLE `sys_job_log`  (
   `exception_info` varchar(2000) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL DEFAULT '' COMMENT '异常信息',
   `create_time` datetime NULL DEFAULT NULL COMMENT '创建时间',
   PRIMARY KEY (`job_log_id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci COMMENT = '定时任务调度日志表' ROW_FORMAT = DYNAMIC;
+) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci COMMENT = '定时任务调度日志表' ROW_FORMAT = DYNAMIC;
 
 -- ----------------------------
 -- Records of sys_job_log
@@ -720,7 +721,7 @@ CREATE TABLE `sys_logininfor`  (
   PRIMARY KEY (`info_id`) USING BTREE,
   INDEX `idx_sys_logininfor_s`(`status` ASC) USING BTREE,
   INDEX `idx_sys_logininfor_lt`(`login_time` ASC) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 110 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci COMMENT = '系统访问记录' ROW_FORMAT = DYNAMIC;
+) ENGINE = InnoDB AUTO_INCREMENT = 105 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci COMMENT = '系统访问记录' ROW_FORMAT = DYNAMIC;
 
 -- ----------------------------
 -- Records of sys_logininfor
@@ -730,11 +731,6 @@ INSERT INTO `sys_logininfor` VALUES (101, 'admin', '127.0.0.1', '内网IP', 'Chr
 INSERT INTO `sys_logininfor` VALUES (102, 'admin', '127.0.0.1', '内网IP', 'Chrome 14', 'Windows 10', '0', '登录成功', '2025-10-19 09:26:06');
 INSERT INTO `sys_logininfor` VALUES (103, 'admin', '127.0.0.1', '内网IP', 'Chrome 14', 'Windows 10', '0', '退出成功', '2025-10-19 11:00:03');
 INSERT INTO `sys_logininfor` VALUES (104, 'admin', '127.0.0.1', '内网IP', 'Chrome 14', 'Windows 10', '0', '登录成功', '2025-10-19 11:00:12');
-INSERT INTO `sys_logininfor` VALUES (105, 'admin', '127.0.0.1', '内网IP', 'Chrome 14', 'Windows 10', '0', '登录成功', '2025-10-19 15:35:10');
-INSERT INTO `sys_logininfor` VALUES (106, 'admin', '127.0.0.1', '内网IP', 'Chrome 14', 'Windows 10', '0', '登录成功', '2025-10-20 12:48:13');
-INSERT INTO `sys_logininfor` VALUES (107, 'admin', '127.0.0.1', '内网IP', 'Chrome 14', 'Windows 10', '0', '登录成功', '2025-10-20 14:24:14');
-INSERT INTO `sys_logininfor` VALUES (108, 'admin', '127.0.0.1', '内网IP', 'Chrome 14', 'Windows 10', '0', '登录成功', '2025-10-20 14:25:41');
-INSERT INTO `sys_logininfor` VALUES (109, 'admin', '127.0.0.1', '内网IP', 'Chrome 14', 'Windows 10', '0', '登录成功', '2025-10-20 20:40:04');
 
 -- ----------------------------
 -- Table structure for sys_menu
@@ -947,7 +943,7 @@ CREATE TABLE `sys_oper_log`  (
   INDEX `idx_sys_oper_log_bt`(`business_type` ASC) USING BTREE,
   INDEX `idx_sys_oper_log_s`(`status` ASC) USING BTREE,
   INDEX `idx_sys_oper_log_ot`(`oper_time` ASC) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 171 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci COMMENT = '操作日志记录' ROW_FORMAT = DYNAMIC;
+) ENGINE = InnoDB AUTO_INCREMENT = 141 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci COMMENT = '操作日志记录' ROW_FORMAT = DYNAMIC;
 
 -- ----------------------------
 -- Records of sys_oper_log
@@ -993,36 +989,6 @@ INSERT INTO `sys_oper_log` VALUES (137, '员工基本信息', 1, 'com.ruoyi.empl
 INSERT INTO `sys_oper_log` VALUES (138, '员工基本信息', 2, 'com.ruoyi.employee.controller.EmployeeController.edit()', 'PUT', 1, 'admin', '研发部门', '/employee/employee', '127.0.0.1', '内网IP', '{\"deptId\":1,\"empAge\":8,\"empGender\":\"男\",\"empId\":5,\"empName\":\"88\",\"empPhone\":\"18569789546\",\"params\":{},\"posId\":1}', '{\"msg\":\"操作成功\",\"code\":200}', 0, NULL, '2025-10-19 09:52:31', 12);
 INSERT INTO `sys_oper_log` VALUES (139, '员工基本信息', 1, 'com.ruoyi.employee.controller.EmployeeController.add()', 'POST', 1, 'admin', '研发部门', '/employee/employee', '127.0.0.1', '内网IP', '{\"deptId\":1,\"empAge\":66,\"empGender\":\"男\",\"empName\":\"88888\",\"empPhone\":\"15698745896\",\"params\":{},\"posId\":3}', NULL, 1, '员工部门与职位所属部门不一致，请重新选择', '2025-10-19 10:09:37', 25);
 INSERT INTO `sys_oper_log` VALUES (140, '员工基本信息', 1, 'com.ruoyi.employee.controller.EmployeeController.add()', 'POST', 1, 'admin', '研发部门', '/employee/employee', '127.0.0.1', '内网IP', '{\"deptId\":1,\"empAge\":66,\"empGender\":\"男\",\"empId\":6,\"empName\":\"88888\",\"empPhone\":\"15698745896\",\"params\":{},\"posId\":1}', '{\"msg\":\"操作成功\",\"code\":200}', 0, NULL, '2025-10-19 10:09:41', 21);
-INSERT INTO `sys_oper_log` VALUES (141, '员工工资信息', 3, 'com.ruoyi.salaryinfo.controller.SalaryinfoController.removeByRecordIds()', 'DELETE', 1, 'admin', '研发部门', '/salaryinfo/salaryinfo/1,2', '127.0.0.1', '内网IP', '[1,2]', '{\"msg\":\"操作成功\",\"code\":200}', 0, NULL, '2025-10-19 15:35:30', 18);
-INSERT INTO `sys_oper_log` VALUES (142, '员工考勤信息', 3, 'com.ruoyi.attendance.controller.AttendanceController.remove()', 'DELETE', 1, 'admin', '研发部门', '/attendance/attendance/1,2', '127.0.0.1', '内网IP', '[1,2]', '{\"msg\":\"操作成功\",\"code\":200}', 0, NULL, '2025-10-19 15:35:40', 7);
-INSERT INTO `sys_oper_log` VALUES (143, '员工考勤信息', 3, 'com.ruoyi.attendance.controller.AttendanceController.remove()', 'DELETE', 1, 'admin', '研发部门', '/attendance/attendance/1,2', '127.0.0.1', '内网IP', '[1,2]', '{\"msg\":\"操作成功\",\"code\":200}', 0, NULL, '2025-10-20 12:50:14', 17);
-INSERT INTO `sys_oper_log` VALUES (144, '员工考勤信息', 1, 'com.ruoyi.attendance.controller.AttendanceController.add()', 'POST', 1, 'admin', '研发部门', '/attendance/attendance/add', '127.0.0.1', '内网IP', '{\"absentDays\":2,\"attendBonus\":800,\"attendDays\":2,\"empId\":1,\"overtimeTimes\":2,\"params\":{}}', '{\"msg\":\"操作成功\",\"code\":200}', 0, NULL, '2025-10-20 14:44:07', 81);
-INSERT INTO `sys_oper_log` VALUES (145, '员工考勤信息', 1, 'com.ruoyi.attendance.controller.AttendanceController.add()', 'POST', 1, 'admin', '研发部门', '/attendance/attendance/add', '127.0.0.1', '内网IP', '{\"absentDays\":5,\"attendBonus\":500,\"attendDays\":25,\"empId\":2,\"overtimeTimes\":5,\"params\":{}}', '{\"msg\":\"操作成功\",\"code\":200}', 0, NULL, '2025-10-20 14:44:15', 19);
-INSERT INTO `sys_oper_log` VALUES (146, '员工考勤信息', 3, 'com.ruoyi.attendance.controller.AttendanceController.removeByRecordIds()', 'DELETE', 1, 'admin', '研发部门', '/attendance/attendance/record/11,12', '127.0.0.1', '内网IP', '[11,12]', NULL, 1, 'nested exception is org.apache.ibatis.binding.BindingException: Parameter \'RecordId\' not found. Available parameters are [array, arg0]', '2025-10-20 14:44:25', 15);
-INSERT INTO `sys_oper_log` VALUES (147, '员工考勤信息', 3, 'com.ruoyi.attendance.controller.AttendanceController.removeByRecordIds()', 'DELETE', 1, 'admin', '研发部门', '/attendance/attendance/record/11,12', '127.0.0.1', '内网IP', '[11,12]', '{\"msg\":\"操作成功\",\"code\":200}', 0, NULL, '2025-10-20 14:47:33', 23);
-INSERT INTO `sys_oper_log` VALUES (148, '员工考勤信息', 1, 'com.ruoyi.attendance.controller.AttendanceController.add()', 'POST', 1, 'admin', '研发部门', '/attendance/attendance/add', '127.0.0.1', '内网IP', '{\"absentDays\":1,\"attendBonus\":900,\"attendDays\":1,\"empId\":1,\"overtimeTimes\":1,\"params\":{}}', '{\"msg\":\"操作成功\",\"code\":200}', 0, NULL, '2025-10-20 14:48:25', 218);
-INSERT INTO `sys_oper_log` VALUES (149, '员工考勤信息', 1, 'com.ruoyi.attendance.controller.AttendanceController.add()', 'POST', 1, 'admin', '研发部门', '/attendance/attendance/add', '127.0.0.1', '内网IP', '{\"absentDays\":1,\"attendBonus\":900,\"attendDays\":1,\"empId\":1,\"overtimeTimes\":1,\"params\":{}}', '{\"msg\":\"操作成功\",\"code\":200}', 0, NULL, '2025-10-20 14:48:30', 19);
-INSERT INTO `sys_oper_log` VALUES (150, '员工考勤信息', 3, 'com.ruoyi.attendance.controller.AttendanceController.removeByRecordIds()', 'DELETE', 1, 'admin', '研发部门', '/attendance/attendance/record/13,14', '127.0.0.1', '内网IP', '[13,14]', '{\"msg\":\"操作成功\",\"code\":200}', 0, NULL, '2025-10-20 14:48:37', 12);
-INSERT INTO `sys_oper_log` VALUES (151, '工资标准', 1, 'com.ruoyi.salarystandard.controller.SalarystandardController.add()', 'POST', 1, 'admin', '研发部门', '/salarystandard/salarystandard', '127.0.0.1', '内网IP', '{\"basicSalary\":88,\"params\":{},\"positionAllowance\":999,\"salaryLevel\":\"C\"}', NULL, 1, '\r\n### Error updating database.  Cause: java.sql.SQLException: Field \'pos_id\' doesn\'t have a default value\r\n### The error may exist in file [D:\\ruoyi\\ruoyi-admin\\target\\classes\\mapper\\salarystandard\\SalarystandardMapper.xml]\r\n### The error may involve com.ruoyi.salarystandard.mapper.SalarystandardMapper.insertSalarystandard-Inline\r\n### The error occurred while setting parameters\r\n### SQL: insert into salarystandard          ( basic_salary,             salary_level,             position_allowance )           values ( ?,             ?,             ? )\r\n### Cause: java.sql.SQLException: Field \'pos_id\' doesn\'t have a default value\n; Field \'pos_id\' doesn\'t have a default value; nested exception is java.sql.SQLException: Field \'pos_id\' doesn\'t have a default value', '2025-10-20 14:49:04', 114);
-INSERT INTO `sys_oper_log` VALUES (152, '职务信息', 1, 'com.ruoyi.jobposition.controller.JobpositionController.add()', 'POST', 1, 'admin', '研发部门', '/jobposition/jobposition', '127.0.0.1', '内网IP', '{\"deptId\":2,\"params\":{},\"posId\":4,\"posName\":\"总经理\"}', '{\"msg\":\"操作成功\",\"code\":200}', 0, NULL, '2025-10-20 15:01:15', 22);
-INSERT INTO `sys_oper_log` VALUES (153, '工资标准', 1, 'com.ruoyi.salarystandard.controller.SalarystandardController.add()', 'POST', 1, 'admin', '研发部门', '/salarystandard/salarystandard', '127.0.0.1', '内网IP', '{\"basicSalary\":6000,\"params\":{},\"positionAllowance\":800,\"salaryLevel\":\"4\"}', NULL, 1, '\r\n### Error updating database.  Cause: java.sql.SQLIntegrityConstraintViolationException: Duplicate entry \'1\' for key \'salarystandard.PRIMARY\'\r\n### The error may exist in file [D:\\ruoyi\\ruoyi-admin\\target\\classes\\mapper\\salarystandard\\SalarystandardMapper.xml]\r\n### The error may involve com.ruoyi.salarystandard.mapper.SalarystandardMapper.insertSalarystandard-Inline\r\n### The error occurred while setting parameters\r\n### SQL: insert into salarystandard          ( basic_salary,             salary_level,             position_allowance )           values ( ?,             ?,             ? )\r\n### Cause: java.sql.SQLIntegrityConstraintViolationException: Duplicate entry \'1\' for key \'salarystandard.PRIMARY\'\n; Duplicate entry \'1\' for key \'salarystandard.PRIMARY\'; nested exception is java.sql.SQLIntegrityConstraintViolationException: Duplicate entry \'1\' for key \'salarystandard.PRIMARY\'', '2025-10-20 15:02:14', 11);
-INSERT INTO `sys_oper_log` VALUES (154, '工资标准', 1, 'com.ruoyi.salarystandard.controller.SalarystandardController.add()', 'POST', 1, 'admin', '研发部门', '/salarystandard/salarystandard', '127.0.0.1', '内网IP', '{\"basicSalary\":5000,\"params\":{},\"posId\":1,\"positionAllowance\":9502,\"salaryLevel\":\"p\"}', NULL, 1, '\r\n### Error updating database.  Cause: java.sql.SQLIntegrityConstraintViolationException: Duplicate entry \'1\' for key \'salarystandard.PRIMARY\'\r\n### The error may exist in file [D:\\ruoyi\\ruoyi-admin\\target\\classes\\mapper\\salarystandard\\SalarystandardMapper.xml]\r\n### The error may involve com.ruoyi.salarystandard.mapper.SalarystandardMapper.insertSalarystandard-Inline\r\n### The error occurred while setting parameters\r\n### SQL: insert into salarystandard          ( pos_id,             basic_salary,             salary_level,             position_allowance )           values ( ?,             ?,             ?,             ? )\r\n### Cause: java.sql.SQLIntegrityConstraintViolationException: Duplicate entry \'1\' for key \'salarystandard.PRIMARY\'\n; Duplicate entry \'1\' for key \'salarystandard.PRIMARY\'; nested exception is java.sql.SQLIntegrityConstraintViolationException: Duplicate entry \'1\' for key \'salarystandard.PRIMARY\'', '2025-10-20 15:06:18', 283);
-INSERT INTO `sys_oper_log` VALUES (155, '工资标准', 1, 'com.ruoyi.salarystandard.controller.SalarystandardController.add()', 'POST', 1, 'admin', '研发部门', '/salarystandard/salarystandard', '127.0.0.1', '内网IP', '{\"basicSalary\":88,\"params\":{},\"posId\":88,\"positionAllowance\":6,\"salaryLevel\":\"66\"}', NULL, 1, '\r\n### Error updating database.  Cause: java.sql.SQLIntegrityConstraintViolationException: Cannot add or update a child row: a foreign key constraint fails (`ruoyi`.`salarystandard`, CONSTRAINT `salarystandard_ibfk_1` FOREIGN KEY (`pos_id`) REFERENCES `jobposition` (`pos_id`) ON DELETE CASCADE ON UPDATE CASCADE)\r\n### The error may exist in file [D:\\ruoyi\\ruoyi-admin\\target\\classes\\mapper\\salarystandard\\SalarystandardMapper.xml]\r\n### The error may involve com.ruoyi.salarystandard.mapper.SalarystandardMapper.insertSalarystandard-Inline\r\n### The error occurred while setting parameters\r\n### SQL: insert into salarystandard          ( pos_id,             basic_salary,             salary_level,             position_allowance )           values ( ?,             ?,             ?,             ? )\r\n### Cause: java.sql.SQLIntegrityConstraintViolationException: Cannot add or update a child row: a foreign key constraint fails (`ruoyi`.`salarystandard`, CONSTRAINT `salarystandard_ibfk_1` FOREIGN KEY (`pos_id`) REFERENCES `jobposition` (`pos_id`) ON DELETE CASCADE ON UPDATE CASCADE)\n; Cannot add or update a child row: a foreign key constraint fails (`ruoyi`.`salarystandard`, CONSTRAINT `salarystandard_ibfk_1` FOREIGN KEY (`pos_id`) REFERENCES `jobposition` (`pos_id`) ON DELETE CASCADE ON UPDATE CASCADE); nested exception is java.sql.SQLIntegrityConstraintViolationException: Cannot add or update a child row: a foreign key constraint fails (`ruoyi`.`salarystandard`, CONSTRAINT `salarystandard_ibfk_1` FOREIGN KEY (`pos_id`) REFERENCES `jobposition` (`pos_id`) ON DELETE CASCADE ON UPDATE CASCADE)', '2025-10-20 15:08:41', 257);
-INSERT INTO `sys_oper_log` VALUES (156, '工资标准', 1, 'com.ruoyi.salarystandard.controller.SalarystandardController.add()', 'POST', 1, 'admin', '研发部门', '/salarystandard/salarystandard', '127.0.0.1', '内网IP', '{\"basicSalary\":88,\"params\":{},\"posId\":88,\"positionAllowance\":6,\"salaryLevel\":\"66\"}', NULL, 1, '\r\n### Error updating database.  Cause: java.sql.SQLIntegrityConstraintViolationException: Cannot add or update a child row: a foreign key constraint fails (`ruoyi`.`salarystandard`, CONSTRAINT `fk_salarystandard_pos_id` FOREIGN KEY (`pos_id`) REFERENCES `jobposition` (`pos_id`))\r\n### The error may exist in file [D:\\ruoyi\\ruoyi-admin\\target\\classes\\mapper\\salarystandard\\SalarystandardMapper.xml]\r\n### The error may involve com.ruoyi.salarystandard.mapper.SalarystandardMapper.insertSalarystandard-Inline\r\n### The error occurred while setting parameters\r\n### SQL: insert into salarystandard          ( pos_id,             basic_salary,             salary_level,             position_allowance )           values ( ?,             ?,             ?,             ? )\r\n### Cause: java.sql.SQLIntegrityConstraintViolationException: Cannot add or update a child row: a foreign key constraint fails (`ruoyi`.`salarystandard`, CONSTRAINT `fk_salarystandard_pos_id` FOREIGN KEY (`pos_id`) REFERENCES `jobposition` (`pos_id`))\n; Cannot add or update a child row: a foreign key constraint fails (`ruoyi`.`salarystandard`, CONSTRAINT `fk_salarystandard_pos_id` FOREIGN KEY (`pos_id`) REFERENCES `jobposition` (`pos_id`)); nested exception is java.sql.SQLIntegrityConstraintViolationException: Cannot add or update a child row: a foreign key constraint fails (`ruoyi`.`salarystandard`, CONSTRAINT `fk_salarystandard_pos_id` FOREIGN KEY (`pos_id`) REFERENCES `jobposition` (`pos_id`))', '2025-10-20 15:15:12', 10);
-INSERT INTO `sys_oper_log` VALUES (157, '工资标准', 1, 'com.ruoyi.salarystandard.controller.SalarystandardController.add()', 'POST', 1, 'admin', '研发部门', '/salarystandard/salarystandard', '127.0.0.1', '内网IP', '{\"basicSalary\":88,\"params\":{},\"posId\":88,\"positionAllowance\":6,\"salaryLevel\":\"66\"}', NULL, 1, '\r\n### Error updating database.  Cause: java.sql.SQLIntegrityConstraintViolationException: Cannot add or update a child row: a foreign key constraint fails (`ruoyi`.`salarystandard`, CONSTRAINT `fk_salarystandard_pos_id` FOREIGN KEY (`pos_id`) REFERENCES `jobposition` (`pos_id`))\r\n### The error may exist in file [D:\\ruoyi\\ruoyi-admin\\target\\classes\\mapper\\salarystandard\\SalarystandardMapper.xml]\r\n### The error may involve com.ruoyi.salarystandard.mapper.SalarystandardMapper.insertSalarystandard-Inline\r\n### The error occurred while setting parameters\r\n### SQL: insert into salarystandard          ( pos_id,             basic_salary,             salary_level,             position_allowance )           values ( ?,             ?,             ?,             ? )\r\n### Cause: java.sql.SQLIntegrityConstraintViolationException: Cannot add or update a child row: a foreign key constraint fails (`ruoyi`.`salarystandard`, CONSTRAINT `fk_salarystandard_pos_id` FOREIGN KEY (`pos_id`) REFERENCES `jobposition` (`pos_id`))\n; Cannot add or update a child row: a foreign key constraint fails (`ruoyi`.`salarystandard`, CONSTRAINT `fk_salarystandard_pos_id` FOREIGN KEY (`pos_id`) REFERENCES `jobposition` (`pos_id`)); nested exception is java.sql.SQLIntegrityConstraintViolationException: Cannot add or update a child row: a foreign key constraint fails (`ruoyi`.`salarystandard`, CONSTRAINT `fk_salarystandard_pos_id` FOREIGN KEY (`pos_id`) REFERENCES `jobposition` (`pos_id`))', '2025-10-20 15:15:32', 174);
-INSERT INTO `sys_oper_log` VALUES (158, '工资标准', 1, 'com.ruoyi.salarystandard.controller.SalarystandardController.add()', 'POST', 1, 'admin', '研发部门', '/salarystandard/salarystandard', '127.0.0.1', '内网IP', '{\"basicSalary\":88,\"params\":{},\"posId\":1,\"positionAllowance\":6,\"salaryLevel\":\"66\"}', '{\"msg\":\"操作成功\",\"code\":200}', 0, NULL, '2025-10-20 15:16:33', 98);
-INSERT INTO `sys_oper_log` VALUES (159, '工资标准', 1, 'com.ruoyi.salarystandard.controller.SalarystandardController.add()', 'POST', 1, 'admin', '研发部门', '/salarystandard/salarystandard', '127.0.0.1', '内网IP', '{\"basicSalary\":6,\"params\":{},\"posId\":1,\"positionAllowance\":6,\"salaryLevel\":\"6\"}', '{\"msg\":\"操作成功\",\"code\":200}', 0, NULL, '2025-10-20 15:16:44', 11);
-INSERT INTO `sys_oper_log` VALUES (160, '工资标准', 3, 'com.ruoyi.salarystandard.controller.SalarystandardController.remove()', 'DELETE', 1, 'admin', '研发部门', '/salarystandard/salarystandard/1,1', '127.0.0.1', '内网IP', '[1,1]', '{\"msg\":\"操作成功\",\"code\":200}', 0, NULL, '2025-10-20 15:16:53', 12);
-INSERT INTO `sys_oper_log` VALUES (161, '工资标准', 1, 'com.ruoyi.salarystandard.controller.SalarystandardController.add()', 'POST', 1, 'admin', '研发部门', '/salarystandard/salarystandard', '127.0.0.1', '内网IP', '{\"basicSalary\":55,\"params\":{},\"posId\":1,\"positionAllowance\":55,\"salaryLevel\":\"55\"}', '{\"msg\":\"操作成功\",\"code\":200}', 0, NULL, '2025-10-20 15:17:06', 11);
-INSERT INTO `sys_oper_log` VALUES (162, '工资标准', 1, 'com.ruoyi.salarystandard.controller.SalarystandardController.add()', 'POST', 1, 'admin', '研发部门', '/salarystandard/salarystandard', '127.0.0.1', '内网IP', '{\"basicSalary\":99,\"params\":{},\"posId\":1,\"positionAllowance\":99,\"salaryLevel\":\"99\"}', '{\"msg\":\"操作成功\",\"code\":200}', 0, NULL, '2025-10-20 15:17:13', 7);
-INSERT INTO `sys_oper_log` VALUES (163, '工资标准', 1, 'com.ruoyi.salarystandard.controller.SalarystandardController.add()', 'POST', 1, 'admin', '研发部门', '/salarystandard/salarystandard', '127.0.0.1', '内网IP', '{\"basicSalary\":33,\"params\":{},\"posId\":1,\"positionAllowance\":33,\"salaryLevel\":\"33\"}', '{\"msg\":\"操作成功\",\"code\":200}', 0, NULL, '2025-10-20 15:17:20', 5);
-INSERT INTO `sys_oper_log` VALUES (164, '工资标准', 3, 'com.ruoyi.salarystandard.controller.SalarystandardController.remove()', 'DELETE', 1, 'admin', '研发部门', '/salarystandard/salarystandard/1,1', '127.0.0.1', '内网IP', '[1,1]', '{\"msg\":\"操作成功\",\"code\":200}', 0, NULL, '2025-10-20 15:17:25', 6);
-INSERT INTO `sys_oper_log` VALUES (165, '员工工资信息', 3, 'com.ruoyi.salaryinfo.controller.SalaryinfoController.removeByRecordIds()', 'DELETE', 1, 'admin', '研发部门', '/salaryinfo/salaryinfo/1,1', '127.0.0.1', '内网IP', '[1,1]', '{\"msg\":\"操作失败\",\"code\":500}', 0, NULL, '2025-10-20 15:17:38', 6);
-INSERT INTO `sys_oper_log` VALUES (166, '职务信息', 1, 'com.ruoyi.jobposition.controller.JobpositionController.add()', 'POST', 1, 'admin', '研发部门', '/jobposition/jobposition', '127.0.0.1', '内网IP', '{\"deptId\":1,\"params\":{},\"posId\":5,\"posName\":\"1\"}', '{\"msg\":\"操作成功\",\"code\":200}', 0, NULL, '2025-10-20 15:18:12', 19);
-INSERT INTO `sys_oper_log` VALUES (167, '职务信息', 3, 'com.ruoyi.jobposition.controller.JobpositionController.remove()', 'DELETE', 1, 'admin', '研发部门', '/jobposition/jobposition/4,5', '127.0.0.1', '内网IP', '[4,5]', '{\"msg\":\"操作成功\",\"code\":200}', 0, NULL, '2025-10-20 15:18:17', 9);
-INSERT INTO `sys_oper_log` VALUES (168, '工资标准', 1, 'com.ruoyi.salarystandard.controller.SalarystandardController.add()', 'POST', 1, 'admin', '研发部门', '/salarystandard/salarystandard', '127.0.0.1', '内网IP', '{\"basicSalary\":888,\"params\":{},\"posId\":1,\"positionAllowance\":55,\"salaryLevel\":\"552\"}', '{\"msg\":\"操作成功\",\"code\":200}', 0, NULL, '2025-10-20 15:24:49', 176);
-INSERT INTO `sys_oper_log` VALUES (169, '工资标准', 1, 'com.ruoyi.salarystandard.controller.SalarystandardController.add()', 'POST', 1, 'admin', '研发部门', '/salarystandard/salarystandard', '127.0.0.1', '内网IP', '{\"basicSalary\":999,\"params\":{},\"posId\":1,\"positionAllowance\":66,\"salaryLevel\":\"55\"}', '{\"msg\":\"操作成功\",\"code\":200}', 0, NULL, '2025-10-20 20:45:12', 95);
-INSERT INTO `sys_oper_log` VALUES (170, '工资标准', 3, 'com.ruoyi.salarystandard.controller.SalarystandardController.remove()', 'DELETE', 1, 'admin', '研发部门', '/salarystandard/salarystandard/1', '127.0.0.1', '内网IP', '[1]', '{\"msg\":\"操作成功\",\"code\":200}', 0, NULL, '2025-10-20 20:45:33', 11);
 
 -- ----------------------------
 -- Table structure for sys_post
@@ -1225,7 +1191,7 @@ CREATE TABLE `sys_user`  (
 -- ----------------------------
 -- Records of sys_user
 -- ----------------------------
-INSERT INTO `sys_user` VALUES (1, 103, 'admin', '若依', '00', 'ry@163.com', '15888888888', '1', '', '$2a$10$7JB720yubVSZvUI0rEqK/.VqGOZTH.ulu33dHOiBE8ByOhJIrdAu2', '0', '0', '127.0.0.1', '2025-10-20 20:40:05', '2025-10-11 10:34:35', 'admin', '2025-10-11 10:34:35', '', NULL, '管理员');
+INSERT INTO `sys_user` VALUES (1, 103, 'admin', '若依', '00', 'ry@163.com', '15888888888', '1', '', '$2a$10$7JB720yubVSZvUI0rEqK/.VqGOZTH.ulu33dHOiBE8ByOhJIrdAu2', '0', '0', '127.0.0.1', '2025-10-19 11:00:12', '2025-10-11 10:34:35', 'admin', '2025-10-11 10:34:35', '', NULL, '管理员');
 INSERT INTO `sys_user` VALUES (2, 105, 'ry', '若依', '00', 'ry@qq.com', '15666666666', '1', '', '$2a$10$7JB720yubVSZvUI0rEqK/.VqGOZTH.ulu33dHOiBE8ByOhJIrdAu2', '0', '0', '127.0.0.1', '2025-10-11 10:34:35', '2025-10-11 10:34:35', 'admin', '2025-10-11 10:34:35', '', NULL, '测试员');
 
 -- ----------------------------
