@@ -59,13 +59,13 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </update>
 
     <delete id="deleteSalarystandardByPosId" parameterType="Long">
-        delete from salarystandard where pos_id = #{posId}
+        delete from salarystandard where salary_id = #{salary_id}
     </delete>
 
     <delete id="deleteSalarystandardByPosIds" parameterType="String">
-        delete from salarystandard where pos_id in 
-        <foreach item="posId" collection="array" open="(" separator="," close=")">
-            #{posId}
+        delete from salarystandard where salary_id in
+        <foreach item="salary_id" collection="array" open="(" separator="," close=")">
+            #{salary_id}
         </foreach>
     </delete>
 </mapper>

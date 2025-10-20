@@ -70,24 +70,24 @@ public class SalarystandardServiceImpl implements ISalarystandardService
     /**
      * 批量删除工资标准
      * 
-     * @param posIds 需要删除的工资标准主键
+     * @param salary_id 需要删除的工资标准主键
      * @return 结果
      */
     @Override
-    public int deleteSalarystandardByPosIds(Long[] posIds)
+    public int deleteSalarystandardByPosIds(Long[] salary_id)
     {
-        return salarystandardMapper.deleteSalarystandardByPosIds(posIds);
+        return salarystandardMapper.deleteSalarystandardByPosIds(salary_id);
     }
 
     /**
      * 删除工资标准信息
      * 
-     * @param posId 工资标准主键
+     * @param salary_id 工资标准主键
      * @return 结果
      */
     @Override
-    public int deleteSalarystandardByPosId(Long posId)
+    public int deleteSalarystandardByPosId(Long salary_id)
     {
-        return salarystandardMapper.deleteSalarystandardByPosId(posId);
+        return salarystandardMapper.deleteSalarystandardByPosId(salary_id);
     }
 }

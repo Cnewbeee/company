@@ -78,7 +78,6 @@ public class SalarystandardController extends BaseController
     public AjaxResult add(@RequestBody Salarystandard salarystandard)
     {
 
-        salarystandard.setPosId(1L);
         return toAjax(salarystandardService.insertSalarystandard(salarystandard));
     }
 
@@ -98,9 +97,9 @@ public class SalarystandardController extends BaseController
      */
     @PreAuthorize("@ss.hasPermi('salarystandard:salarystandard:remove')")
     @Log(title = "工资标准", businessType = BusinessType.DELETE)
-	@DeleteMapping("/{posIds}")
-    public AjaxResult remove(@PathVariable Long[] posIds)
+	@DeleteMapping("/{salary_id}")
+    public AjaxResult remove(@PathVariable Long[] salary_id)
     {
-        return toAjax(salarystandardService.deleteSalarystandardByPosIds(posIds));
+        return toAjax(salarystandardService.deleteSalarystandardByPosIds(salary_id));
     }
 }
