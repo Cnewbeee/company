@@ -87,7 +87,7 @@
 
     <el-table v-loading="loading" :data="salarystandardList" @selection-change="handleSelectionChange">
       <el-table-column type="selection" width="55" align="center" />
-      <el-table-column label="职位编号" align="center" prop="posId" />
+  <el-table-column label="职位名称" align="center" prop="posName" />
       <el-table-column label="基本工资" align="center" prop="basicSalary" />
       <el-table-column label="薪资等级" align="center" prop="salaryLevel" />
       <el-table-column label="职务补贴" align="center" prop="positionAllowance" />
@@ -122,15 +122,25 @@
     <!-- 添加或修改工资标准对话框 -->
     <el-dialog :title="title" :visible.sync="open" width="500px" append-to-body>
       <el-form ref="form" :model="form" :rules="rules" label-width="80px">
-        <el-form-item label="基本工资" prop="basicSalary">
-          <el-input v-model="form.basicSalary" placeholder="请输入基本工资" />
-        </el-form-item>
-        <el-form-item label="薪资等级" prop="salaryLevel">
-          <el-input v-model="form.salaryLevel" placeholder="请输入薪资等级" />
-        </el-form-item>
-        <el-form-item label="职务补贴" prop="positionAllowance">
-          <el-input v-model="form.positionAllowance" placeholder="请输入职务补贴" />
-        </el-form-item>
+          <el-form-item label="职位名称" prop="posId">
+            <el-select v-model="form.posId" placeholder="请选择职位名称" filterable>
+              <el-option
+                v-for="item in jobpositionOptions"
+                :key="item.posId"
+                :label="item.posName"
+                :value="item.posId"
+              />
+            </el-select>
+          </el-form-item>
+          <el-form-item label="基本工资" prop="basicSalary">
+            <el-input v-model="form.basicSalary" placeholder="请输入基本工资" />
+          </el-form-item>
+          <el-form-item label="薪资等级" prop="salaryLevel">
+            <el-input v-model="form.salaryLevel" placeholder="请输入薪资等级" />
+          </el-form-item>
+          <el-form-item label="职务补贴" prop="positionAllowance">
+            <el-input v-model="form.positionAllowance" placeholder="请输入职务补贴" />
+          </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button type="primary" @click="submitForm">确 定</el-button>
@@ -142,6 +152,7 @@
 
 <script>
 import { listSalarystandard, getSalarystandard, delSalarystandard, addSalarystandard, updateSalarystandard } from "@/api/salarystandard/salarystandard"
+import { listJobposition } from "@/api/jobposition/jobposition"
 
 export default {
   name: "Salarystandard",
@@ -181,20 +192,57 @@ export default {
         basicSalary: [
           { required: true, message: "基本工资不能为空", trigger: "blur" }
         ],
+          posId: [
+            { required: true, message: "职位名称不能为空", trigger: "change" }
+          ],
       }
+        ,
+        // 职位下拉选项
+        jobpositionOptions: []
     }
   },
   created() {
     this.getList()
+    this.getJobpositionOptions()
   },
   methods: {
+      /** 获取职位列表 */
+      getJobpositionOptions() {
+        listJobposition({}).then(res => {
+          if (res && res.rows) {
+            this.jobpositionOptions = res.rows
+          }
+        })
+      },
     /** 查询工资标准列表 */
     getList() {
       this.loading = true
+      const doMap = (rows) => {
+        this.salarystandardList = rows.map(item => {
+          let job = this.jobpositionOptions.find(j => String(j.posId) === String(item.posId))
+          return {
+            ...item,
+            posName: job ? job.posName : (item.posId || "")
+          }
+        })
+      }
       listSalarystandard(this.queryParams).then(response => {
-        this.salarystandardList = response.rows
-        this.total = response.total
-        this.loading = false
+        // 如果职位列表已加载，直接映射
+        if (this.jobpositionOptions && this.jobpositionOptions.length > 0) {
+          doMap(response.rows)
+          this.total = response.total
+          this.loading = false
+        } else {
+          // 职位列表未加载，先加载后再映射
+          listJobposition({}).then(res => {
+            if (res && res.rows) {
+              this.jobpositionOptions = res.rows
+            }
+            doMap(response.rows)
+            this.total = response.total
+            this.loading = false
+          })
+        }
       })
     },
     // 取消按钮
@@ -248,7 +296,7 @@ export default {
     submitForm() {
       this.$refs["form"].validate(valid => {
         if (valid) {
-          if (this.form.posId != null) {
+          if (this.form.salaryId != null) {
             updateSalarystandard(this.form).then(response => {
               this.$modal.msgSuccess("修改成功")
               this.open = false

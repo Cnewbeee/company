@@ -45,6 +45,8 @@ public class Salarystandard extends BaseEntity {
     @Excel(name = "职务补贴")
     private BigDecimal positionAllowance;
 
+    public Salarystandard(){}
+
     public Salarystandard(Long salaryId) {
         this.salaryId = salaryId;
     }

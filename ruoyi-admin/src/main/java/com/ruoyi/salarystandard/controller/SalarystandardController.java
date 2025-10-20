@@ -77,8 +77,6 @@ public class SalarystandardController extends BaseController
     @PostMapping
     public AjaxResult add(@RequestBody Salarystandard salarystandard)
     {
-
-        salarystandard.setPosId(1L);
         return toAjax(salarystandardService.insertSalarystandard(salarystandard));
     }
 

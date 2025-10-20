@@ -32,16 +32,16 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         where pos_id = #{posId}
     </select>
 
-    <insert id="insertSalarystandard" parameterType="Salarystandard">
+    <insert id="insertSalarystandard" parameterType="Salarystandard" keyProperty="posId">
         insert into salarystandard
         <trim prefix="(" suffix=")" suffixOverrides=",">
-            <if test="posId != null">pos_id,</if>
+            <if test="posId != null ">pos_id</if>
             <if test="basicSalary != null">basic_salary,</if>
             <if test="salaryLevel != null">salary_level,</if>
             <if test="positionAllowance != null">position_allowance,</if>
          </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
-            <if test="posId != null">#{posId},</if>
+            <if test="posId != null ">#{posId}</if>
             <if test="basicSalary != null">#{basicSalary},</if>
             <if test="salaryLevel != null">#{salaryLevel},</if>
             <if test="positionAllowance != null">#{positionAllowance},</if>
@@ -51,6 +51,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     <update id="updateSalarystandard" parameterType="Salarystandard">
         update salarystandard
         <trim prefix="SET" suffixOverrides=",">
+            <if test="posId != null ">and pos_id = #{posId}</if>
             <if test="basicSalary != null">basic_salary = #{basicSalary},</if>
             <if test="salaryLevel != null">salary_level = #{salaryLevel},</if>
             <if test="positionAllowance != null">position_allowance = #{positionAllowance},</if>
