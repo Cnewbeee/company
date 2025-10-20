@@ -113,9 +113,9 @@
     </delete>
 
     <delete id="deleteAttendanceByEmpIds" parameterType="String">
-        delete from attendance where emp_id in
-        <foreach item="empId" collection="array" open="(" separator="," close=")">
-            #{empId}
+        delete from attendance where record_id in
+        <foreach item="recordIds" collection="array" open="(" separator="," close=")">
+            #{recordId}
         </foreach>
     </delete>
 
