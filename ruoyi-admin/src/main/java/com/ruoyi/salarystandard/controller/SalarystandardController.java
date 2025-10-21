@@ -55,7 +55,9 @@ public class SalarystandardController extends BaseController
     public void export(HttpServletResponse response, Salarystandard salarystandard)
     {
         List<Salarystandard> list = salarystandardService.selectSalarystandardList(salarystandard);
+        System.out.println(list);
         ExcelUtil<Salarystandard> util = new ExcelUtil<Salarystandard>(Salarystandard.class);
+        System.out.println(util);
         util.exportExcel(response, list, "工资标准数据");
     }
 
@@ -63,10 +65,10 @@ public class SalarystandardController extends BaseController
      * 获取工资标准详细信息
      */
     @PreAuthorize("@ss.hasPermi('salarystandard:salarystandard:query')")
-    @GetMapping(value = "/{posId}")
-    public AjaxResult getInfo(@PathVariable("posId") Long posId)
+    @GetMapping(value = "/{salaryId}")
+    public AjaxResult getInfo(@PathVariable("salaryId") Long salaryId)
     {
-        return success(salarystandardService.selectSalarystandardByPosId(posId));
+        return success(salarystandardService.selectSalarystandardByPosId(salaryId));
     }
 
     /**

@@ -22,13 +22,13 @@ public class SalarystandardServiceImpl implements ISalarystandardService
     /**
      * 查询工资标准
      * 
-     * @param posId 工资标准主键
+     * @param salaryId 工资标准主键
      * @return 工资标准
      */
     @Override
-    public Salarystandard selectSalarystandardByPosId(Long posId)
+    public Salarystandard selectSalarystandardByPosId(Long salaryId)
     {
-        return salarystandardMapper.selectSalarystandardByPosId(posId);
+        return salarystandardMapper.selectSalarystandardByPosId(salaryId);
     }
 
     /**

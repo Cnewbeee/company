@@ -285,8 +285,10 @@ export default {
     /** 修改按钮操作 */
     handleUpdate(row) {
       this.reset()
-      const posId = row.posId || this.ids
-      getSalarystandard(posId).then(response => {
+      console.log(row)
+      const salaryId = row.salaryId || this.ids
+      console.log("TTT")
+      getSalarystandard(salaryId).then(response => {
         this.form = response.data
         this.open = true
         this.title = "修改工资标准"
@@ -314,9 +316,9 @@ export default {
     },
     /** 删除按钮操作 */
     handleDelete(row) {
-      const posIds = row.posId || this.ids
-      this.$modal.confirm('是否确认删除工资标准编号为"' + posIds + '"的数据项？').then(function() {
-        return delSalarystandard(posIds)
+      const salaryId = row.salaryId || this.ids
+      this.$modal.confirm('是否确认删除工资标准编号为"' + salaryId + '"的数据项？').then(function() {
+        return delSalarystandard(salaryId)
       }).then(() => {
         this.getList()
         this.$modal.msgSuccess("删除成功")

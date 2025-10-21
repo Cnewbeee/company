@@ -13,7 +13,7 @@
     </resultMap>
 
     <sql id="selectSalarystandardVo">
-        select pos_id, basic_salary, salary_level, position_allowance
+        select salary_id, pos_id, basic_salary, salary_level, position_allowance
         from salarystandard
     </sql>
 
@@ -30,7 +30,7 @@
 
     <select id="selectSalarystandardByPosId" parameterType="Long" resultMap="SalarystandardResult">
         <include refid="selectSalarystandardVo"/>
-        where pos_id = #{posId}
+        where salary_id = #{salaryId}
     </select>
 
     <insert id="insertSalarystandard" parameterType="Salarystandard" keyProperty="posId">

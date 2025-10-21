@@ -10,9 +10,9 @@ export function listSalarystandard(query) {
 }
 
 // 查询工资标准详细
-export function getSalarystandard(posId) {
+export function getSalarystandard(salaryId) {
   return request({
-    url: '/salarystandard/salarystandard/' + posId,
+    url: '/salarystandard/salarystandard/' + salaryId,
     method: 'get'
   })
 }

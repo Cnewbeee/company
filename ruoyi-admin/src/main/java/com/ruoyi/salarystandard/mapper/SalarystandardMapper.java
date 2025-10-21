@@ -15,10 +15,10 @@ public interface SalarystandardMapper
     /**
      * 查询工资标准
      * 
-     * @param posId 工资标准主键
+     * @param salaryId 工资标准主键
      * @return 工资标准
      */
-    public Salarystandard selectSalarystandardByPosId(Long posId);
+    public Salarystandard selectSalarystandardByPosId(Long salaryId);
 
     /**
      * 查询工资标准列表
