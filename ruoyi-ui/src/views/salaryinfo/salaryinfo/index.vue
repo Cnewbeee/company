@@ -103,14 +103,24 @@
 
     <el-table v-loading="loading" :data="salaryinfoList" @selection-change="handleSelectionChange">
       <el-table-column type="selection" width="55" align="center" />
-  <el-table-column label="记录编号" align="center" prop="recordId" />
-  <el-table-column label="职工编号" align="center" prop="empId" />
-  <el-table-column label="应发工资" align="center" prop="payableSalary" />
-  <el-table-column label="出勤奖金" align="center" prop="attendanceBonus" />
-  <el-table-column label="其他奖金或处罚" align="center" prop="otherBonusPenalty" />
-  <el-table-column label="职工姓名" align="center" prop="empName" />
-  <el-table-column label="实发工资" align="center" prop="actualSalary" />
-  <el-table-column label="奖惩说明" align="center" prop="bonusPenaltyRemark" />
+      <el-table-column label="职工姓名" align="center" prop="empName" />
+      <el-table-column label="应发工资" align="center" prop="payableSalary" />
+      <el-table-column label="出勤奖金" align="center" prop="attendanceBonus" />
+      <el-table-column label="其他奖金或处罚" align="center" prop="otherBonusPenalty" />
+      <el-table-column label="实发工资" align="center" prop="actualSalary" />
+      <el-table-column label="奖惩说明" align="center" prop="bonusPenaltyRemark" />
+      <el-table-column label="创建人" align="center" prop="createBy" />
+      <el-table-column label="创建时间" align="center" prop="createTime">
+        <template slot-scope="scope">
+          {{ scope.row.createTime ? new Date(scope.row.createTime).toLocaleString('zh-CN') : '' }}
+        </template>
+      </el-table-column>
+      <el-table-column label="修改人" align="center" prop="updateBy" />
+      <el-table-column label="修改时间" align="center" prop="updateTime">
+        <template slot-scope="scope">
+          {{ scope.row.updateTime ? new Date(scope.row.updateTime).toLocaleString('zh-CN') : '' }}
+        </template>
+      </el-table-column>
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
         <template slot-scope="scope">
           <el-button
@@ -130,7 +140,7 @@
         </template>
       </el-table-column>
     </el-table>
-    
+
     <pagination
       v-show="total>0"
       :total="total"
@@ -140,13 +150,10 @@
     />
 
     <!-- 添加或修改员工工资信息对话框 -->
-    <el-dialog :title="title" :visible.sync="open" width="500px" append-to-body>
+    <el-dialog :title="title" :visible.sync="open" width="600px" append-to-body>
       <el-form ref="form" :model="form" :rules="rules" label-width="80px">
-        <el-form-item label="记录编号" prop="recordId">
-          <el-input v-model="form.recordId" placeholder="请输入记录编号" />
-        </el-form-item>
-        <el-form-item label="职工编号" prop="empId">
-          <el-input v-model="form.empId" placeholder="请输入职工编号" />
+        <el-form-item label="职工姓名" prop="empName">
+          <el-input v-model="form.empName" placeholder="请输入职工姓名" />
         </el-form-item>
         <el-form-item label="应发工资" prop="payableSalary">
           <el-input v-model="form.payableSalary" placeholder="请输入应发工资" />
@@ -157,14 +164,38 @@
         <el-form-item label="其他奖金或处罚" prop="otherBonusPenalty">
           <el-input v-model="form.otherBonusPenalty" placeholder="请输入其他奖金或处罚，默认为0" />
         </el-form-item>
-        <el-form-item label="职工姓名" prop="empName">
-          <el-input v-model="form.empName" placeholder="请输入职工姓名" />
-        </el-form-item>
         <el-form-item label="实发工资" prop="actualSalary">
           <el-input v-model="form.actualSalary" placeholder="实发工资由系统自动计算" :disabled="true" />
         </el-form-item>
         <el-form-item label="奖惩说明" prop="bonusPenaltyRemark">
           <el-input v-model="form.bonusPenaltyRemark" placeholder="请输入奖惩说明，默认为空" />
+        </el-form-item>
+        <!-- 创建时显示创建人，修改时显示修改人 -->
+        <el-form-item v-if="!form.recordId" label="创建人" prop="createBy">
+          <el-input v-model="form.createBy" :disabled="true" placeholder="创建人" />
+        </el-form-item>
+        <el-form-item v-if="!form.recordId" label="创建时间" prop="createTime">
+          <el-date-picker
+            v-model="form.createTime"
+            type="datetime"
+            placeholder="选择创建时间"
+            format="yyyy-MM-dd HH:mm:ss"
+            value-format="yyyy-MM-dd HH:mm:ss"
+            style="width: 100%;"
+          />
+        </el-form-item>
+        <el-form-item v-if="form.recordId" label="修改人" prop="updateBy">
+          <el-input v-model="form.updateBy" :disabled="true" placeholder="修改人" />
+        </el-form-item>
+        <el-form-item v-if="form.recordId" label="修改时间" prop="updateTime">
+          <el-date-picker
+            v-model="form.updateTime"
+            type="datetime"
+            placeholder="选择修改时间"
+            format="yyyy-MM-dd HH:mm:ss"
+            value-format="yyyy-MM-dd HH:mm:ss"
+            style="width: 100%;"
+          />
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
@@ -172,15 +203,20 @@
         <el-button @click="cancel">取 消</el-button>
       </div>
     </el-dialog>
+
   </div>
 </template>
 
 <script>
 import { listSalaryinfo, getSalaryinfo, delSalaryinfo, addSalaryinfo, updateSalaryinfo } from "@/api/salaryinfo/salaryinfo"
 import eventBus from '@/utils/eventBus'
+import { mapGetters } from 'vuex'
 
 export default {
   name: "Salaryinfo",
+  computed: {
+    ...mapGetters(['name'])
+  },
   data() {
     return {
       // 遮罩层
@@ -223,7 +259,11 @@ export default {
         otherBonusPenalty: 0,
         empName: null,
         actualSalary: null,
-        bonusPenaltyRemark: ''
+        bonusPenaltyRemark: '',
+        createBy: null,
+        updateBy: null,
+        createTime: null,
+        updateTime: null
       },
       // 表单校验
       rules: {
@@ -279,10 +319,15 @@ export default {
         otherBonusPenalty: 0,
         empName: null,
         actualSalary: null,
-        bonusPenaltyRemark: ''
+        bonusPenaltyRemark: '',
+        createBy: null,
+        updateBy: null,
+        createTime: null,
+        updateTime: null
       }
       this.resetForm("form")
     },
+
     /** 搜索按钮操作 */
     handleQuery() {
       this.queryParams.pageNum = 1
@@ -295,22 +340,28 @@ export default {
     },
     // 多选框选中数据
     handleSelectionChange(selection) {
-      this.ids = selection.map(item => item.empId)
+      this.ids = selection.map(item => item.recordId)
       this.single = selection.length!==1
       this.multiple = !selection.length
     },
     /** 新增按钮操作 */
     handleAdd() {
       this.reset()
+      // 创建时自动填充创建人和创建时间
+      this.form.createBy = this.name
+      this.form.createTime = this.getCurrentDateTime()
       this.open = true
       this.title = "添加员工工资信息"
     },
     /** 修改按钮操作 */
     handleUpdate(row) {
       this.reset()
-      const empId = row.empId || this.ids
-      getSalaryinfo(empId).then(response => {
+      const recordId = row.recordId || this.ids
+      getSalaryinfo(recordId).then(response => {
         this.form = response.data
+        // 修改时自动填充修改人和修改时间
+        this.form.updateBy = this.name
+        this.form.updateTime = this.getCurrentDateTime()
         this.open = true
         this.title = "修改员工工资信息"
       })
@@ -319,7 +370,7 @@ export default {
     submitForm() {
       this.$refs["form"].validate(valid => {
         if (valid) {
-          if (this.form.empId != null) {
+          if (this.form.recordId != null) {
             updateSalaryinfo(this.form).then(response => {
               this.$modal.msgSuccess("修改成功")
               this.open = false
@@ -337,9 +388,9 @@ export default {
     },
     /** 删除按钮操作 */
     handleDelete(row) {
-      const empIds = row.empId || this.ids
-      this.$modal.confirm('是否确认删除员工工资信息编号为"' + empIds + '"的数据项？').then(function() {
-        return delSalaryinfo(empIds)
+      const recordIds = row.recordId || this.ids
+      this.$modal.confirm('是否确认删除员工工资信息编号为"' + recordIds + '"的数据项？').then(function() {
+        return delSalaryinfo(recordIds)
       }).then(() => {
         this.getList()
         this.$modal.msgSuccess("删除成功")
@@ -350,6 +401,17 @@ export default {
       this.download('salaryinfo/salaryinfo/export', {
         ...this.queryParams
       }, `salaryinfo_${new Date().getTime()}.xlsx`)
+    },
+    /** 获取当前日期时间 */
+    getCurrentDateTime() {
+      const now = new Date()
+      const year = now.getFullYear()
+      const month = String(now.getMonth() + 1).padStart(2, '0')
+      const day = String(now.getDate()).padStart(2, '0')
+      const hours = String(now.getHours()).padStart(2, '0')
+      const minutes = String(now.getMinutes()).padStart(2, '0')
+      const seconds = String(now.getSeconds()).padStart(2, '0')
+      return `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`
     }
   }
 }

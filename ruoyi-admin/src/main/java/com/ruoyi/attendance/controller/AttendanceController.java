@@ -64,10 +64,10 @@ public class AttendanceController extends BaseController
      * 获取员工考勤信息详细信息
      */
     @PreAuthorize("@ss.hasPermi('attendance:attendance:query')")
-    @GetMapping(value = "/{empId}")
-    public AjaxResult getInfo(@PathVariable("empId") Long empId)
+    @GetMapping(value = "/{recordId}")
+    public AjaxResult getInfo(@PathVariable("recordId") Long recordId)
     {
-        return success(attendanceService.selectAttendanceByEmpId(empId));
+        return success(attendanceService.selectAttendanceByRecordId(recordId));
     }
 
     /**
