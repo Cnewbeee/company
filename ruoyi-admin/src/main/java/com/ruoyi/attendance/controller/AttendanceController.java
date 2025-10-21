@@ -88,6 +88,7 @@ public class AttendanceController extends BaseController
     @PostMapping(value = "/add")
     public AjaxResult add(@RequestBody Attendance attendance)
     {
+
         return toAjax(attendanceService.insertAttendance(attendance));
     }
 

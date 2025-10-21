@@ -83,6 +83,8 @@ public class AttendanceServiceImpl implements IAttendanceService
     @Transactional
     public int insertAttendance(Attendance attendance)
     {
+        System.out.println("开始添加考勤信息，员工ID: " + attendance);
+
         // 计算并设置出勤奖金：1000 - 缺勤天数 * 100
         calculateAttendanceBonus(attendance);
 
@@ -199,10 +201,15 @@ public class AttendanceServiceImpl implements IAttendanceService
                 //System.err.println("员工信息不存在，empId: " + attendance.getEmpId());
                 return;
             }
-            //System.out.println("获取到员工信息: " + employee.getEmpName() + ", 职位ID: " + employee.getPosId());
+
+            attendance.getCreateTime();
+            System.out.println("考勤时间: " + attendance.getCreateTime());
+
 
             // 获取工资标准 - 按职位ID查询
             Salarystandard salarystandard = salarystandardService.selectSalarystandardByPosId(employee.getPosId());
+
+
             if (salarystandard == null) {
                 //System.err.println("工资标准不存在，posId: " + employee.getPosId());
                 return;
@@ -211,6 +218,7 @@ public class AttendanceServiceImpl implements IAttendanceService
 
             // 创建工资信息
             Salaryinfo salaryinfo = new Salaryinfo();
+            salaryinfo.setCreateTime(attendance.getCreateTime());
             salaryinfo.setRecordId(attendance.getRecordId()); // 使用相同的记录编号
             salaryinfo.setEmpId(attendance.getEmpId());
             salaryinfo.setEmpName(employee.getEmpName());

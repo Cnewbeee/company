@@ -95,6 +95,8 @@ public class SalaryinfoController extends BaseController
     @PutMapping
     public AjaxResult edit(@RequestBody Salaryinfo salaryinfo)
     {
+        Date currentDate = new Date();
+        salaryinfo.setUpdateTime(currentDate);
         return toAjax(salaryinfoService.updateSalaryinfo(salaryinfo));
     }
 

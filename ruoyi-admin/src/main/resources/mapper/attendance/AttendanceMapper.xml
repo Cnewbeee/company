@@ -65,9 +65,8 @@
             <if test="attendBonus != null">attend_bonus,</if>
             <if test="absentDays != null">absent_days,</if>
             <if test="createBy != null and createBy != ''">create_by,</if>
-            <if test="createTime != null">create_time,</if>
+            create_time,
             <if test="updateBy != null and updateBy != ''">update_by,</if>
-            <if test="updateTime != null">update_time,</if>
             <if test="remark != null and remark != ''">remark,</if>
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
@@ -78,7 +77,7 @@
             <if test="attendBonus != null">#{attendBonus},</if>
             <if test="absentDays != null">#{absentDays},</if>
             <if test="createBy != null and createBy != ''">#{createBy},</if>
-            <if test="createTime != null">#{createTime},</if>
+            #{createTime},
             <if test="updateBy != null and updateBy != ''">#{updateBy},</if>
             <if test="updateTime != null">#{updateTime},</if>
             <if test="remark != null and remark != ''">#{remark},</if>
