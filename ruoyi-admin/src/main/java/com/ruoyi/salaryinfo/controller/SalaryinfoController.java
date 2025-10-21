@@ -1,9 +1,7 @@
 package com.ruoyi.salaryinfo.controller;
 
 import java.text.SimpleDateFormat;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 import javax.servlet.http.HttpServletResponse;
 
 import com.ruoyi.common.utils.DateUtils;
@@ -139,8 +137,31 @@ public class SalaryinfoController extends BaseController
          Date oneYearAgo = calendar.getTime();
          String formattedOneYearAgo = excelDateFormat.format(oneYearAgo);
 
-         return success(salaryinfoService.getTotalSalaryByYear(formattedOneYearAgo));
+        Map<String, String> map = new HashMap<>();
+        map.put("totalSalary", salaryinfoService.getTotalSalaryByYear(formattedOneYearAgo));
+
+         return success(map);
      }
 
 
+    /**
+     * 统计一年每个月的员工总工资
+     */
+    @PreAuthorize("@ss.hasPermi('salaryinfo:salaryinfo:query')")
+    @GetMapping("/total/month")
+    public AjaxResult getTotalSalaryByMonth()
+    {
+
+        SimpleDateFormat excelDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        Date currentDate = new Date();
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(currentDate);
+        calendar.add(Calendar.YEAR, -1);
+        Date oneYearAgo = calendar.getTime();
+        String formattedOneYearAgo = excelDateFormat.format(oneYearAgo);
+
+
+
+        return success(salaryinfoService.getTotalSalaryByMonth(formattedOneYearAgo));
+    }
 }

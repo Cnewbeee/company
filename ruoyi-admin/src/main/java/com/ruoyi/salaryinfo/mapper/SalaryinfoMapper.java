@@ -2,6 +2,8 @@ package com.ruoyi.salaryinfo.mapper;
 
 import java.math.BigDecimal;
 import java.util.List;
+import java.util.Map;
+
 import com.ruoyi.salaryinfo.domain.Salaryinfo;
 
 /**
@@ -92,7 +94,14 @@ public interface SalaryinfoMapper
      * @param formattedOneYearAgo 指定年份
      * @return 部门员工工资信息列表
      */
-    // 在 SalaryinfoMapper 接口中修改方法签名
     BigDecimal getTotalSalaryByYear(String formattedOneYearAgo);
 
+
+    /**
+     * 获取前一年每个月的员工工资统计
+     *
+     * @param formattedOneYearAgo 一年前的日期
+     * @return 月份-工资的映射关系
+     */
+    List<Map<String, Object>> getTotalSalaryByMonth(String formattedOneYearAgo);
 }

@@ -143,11 +143,22 @@
     </delete>
 
 
-
     <select id="getTotalSalaryByYear" parameterType="string" resultType="java.math.BigDecimal">
-        SELECT COALESCE(SUM(actual_salary), 0) FROM salaryinfo
+        SELECT COALESCE(SUM(actual_salary), 0)
+        FROM salaryinfo
         WHERE create_time >= #{formattedOneYearAgo}
     </select>
 
+
+    <select id="getTotalSalaryByMonth" parameterType="string" resultType="java.util.HashMap">
+        SELECT
+            MONTH(create_time) as month,
+            COALESCE(SUM(actual_salary), 0) as total_salary
+        FROM salaryinfo
+        WHERE create_time >= #{formattedOneYearAgo}
+          AND create_time &lt;= NOW()
+        GROUP BY MONTH(create_time)
+        ORDER BY month
+    </select>
 
 </mapper>

@@ -1,7 +1,11 @@
 package com.ruoyi.salaryinfo.service.impl;
 
 import java.math.BigDecimal;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.ruoyi.salaryinfo.mapper.SalaryinfoMapper;
@@ -136,6 +140,29 @@ public class SalaryinfoServiceImpl implements ISalaryinfoService
     public String getTotalSalaryByYear(String formattedOneYearAgo) {
         BigDecimal totalSalary = salaryinfoMapper.getTotalSalaryByYear(formattedOneYearAgo);
         return totalSalary != null ? totalSalary.toString() : "0";
+    }
+
+    public Map<String, String> getTotalSalaryByMonth(String formattedOneYearAgo) {
+        List<Map<String, Object>> monthlySalaryList  = salaryinfoMapper.getTotalSalaryByMonth(formattedOneYearAgo);
+        Map<String, String> result = new LinkedHashMap<>();
+
+        // 先将查询结果转换为月份-工资的映射
+        Map<String, BigDecimal> monthlySalaryMap = new HashMap<>();
+        for (Map<String, Object> row : monthlySalaryList) {
+            String month = row.get("month").toString();
+            BigDecimal salary = (BigDecimal) row.get("total_salary");
+            monthlySalaryMap.put(month, salary);
+        }
+
+
+        // 确保返回12个月的数据，即使某些月份没有数据也显示0
+        for (int month = 1; month <= 12; month++) {
+            String monthKey = String.format("%02d月", month);
+            BigDecimal salary = monthlySalaryMap.getOrDefault(String.valueOf(month), BigDecimal.ZERO);
+            result.put(monthKey, salary.toString());
+        }
+
+        return result;
     }
 
 

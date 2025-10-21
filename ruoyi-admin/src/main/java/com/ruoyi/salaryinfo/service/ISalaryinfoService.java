@@ -1,6 +1,8 @@
 package com.ruoyi.salaryinfo.service;
 
 import java.util.List;
+import java.util.Map;
+
 import com.ruoyi.salaryinfo.domain.Salaryinfo;
 
 /**
@@ -91,4 +93,12 @@ public interface ISalaryinfoService
      * @return
      */
     String getTotalSalaryByYear(String formattedOneYearAgo);
+
+    /**
+     * 统计前一年每个月的员工总工资
+     *
+     * @param formattedOneYearAgo 一年前的日期
+     * @return 月份-工资的映射关系
+     */
+    Map<String, String> getTotalSalaryByMonth(String formattedOneYearAgo);
 }
