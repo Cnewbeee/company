@@ -42,3 +42,19 @@ export function delSalaryinfo(empId) {
     method: 'delete'
   })
 }
+
+//统计一年的员工工资
+export function gettotalSalary() {
+  return request({
+    url: '/salaryinfo/salaryinfo/total',
+    method: 'get'
+  })
+}
+
+//统计一年每个月的员工总工资
+export function getMonthSalary() {
+  return request({
+    url: '/salaryinfo/salaryinfo/total/month',
+    method: 'get'
+  })
+}

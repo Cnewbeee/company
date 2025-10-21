@@ -153,7 +153,6 @@ public class SalaryinfoController extends BaseController
     @GetMapping("/total/month")
     public AjaxResult getTotalSalaryByMonth()
     {
-
         SimpleDateFormat excelDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         Date currentDate = new Date();
         Calendar calendar = Calendar.getInstance();
@@ -161,8 +160,6 @@ public class SalaryinfoController extends BaseController
         calendar.add(Calendar.YEAR, -1);
         Date oneYearAgo = calendar.getTime();
         String formattedOneYearAgo = excelDateFormat.format(oneYearAgo);
-
-
 
         return success(salaryinfoService.getTotalSalaryByMonth(formattedOneYearAgo));
     }
