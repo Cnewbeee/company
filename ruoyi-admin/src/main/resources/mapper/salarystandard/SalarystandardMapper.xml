@@ -30,7 +30,7 @@
 
     <select id="selectSalarystandardByPosId" parameterType="Long" resultMap="SalarystandardResult">
         <include refid="selectSalarystandardVo"/>
-        where salary_id = #{salaryId}
+        where pos_id  = #{pos_id }
     </select>
 
     <insert id="insertSalarystandard" parameterType="Salarystandard" keyProperty="posId">

@@ -191,17 +191,23 @@ public class AttendanceServiceImpl implements IAttendanceService
      */
     private void createSalaryInfoFromAttendance(Attendance attendance) {
         try {
+            //System.out.println("开始创建工资信息，考勤记录ID: " + attendance.getRecordId() + ", 员工ID: " + attendance.getEmpId());
+
             // 获取员工信息
             Employee employee = employeeService.selectEmployeeByEmpId(attendance.getEmpId());
             if (employee == null) {
+                //System.err.println("员工信息不存在，empId: " + attendance.getEmpId());
                 return;
             }
+            //System.out.println("获取到员工信息: " + employee.getEmpName() + ", 职位ID: " + employee.getPosId());
 
-            // 获取工资标准
+            // 获取工资标准 - 按职位ID查询
             Salarystandard salarystandard = salarystandardService.selectSalarystandardByPosId(employee.getPosId());
             if (salarystandard == null) {
+                //System.err.println("工资标准不存在，posId: " + employee.getPosId());
                 return;
             }
+            //System.out.println("获取到工资标准，基本工资: " + salarystandard.getBasicSalary() + ", 职务补贴: " + salarystandard.getPositionAllowance());
 
             // 创建工资信息
             Salaryinfo salaryinfo = new Salaryinfo();
@@ -224,12 +230,19 @@ public class AttendanceServiceImpl implements IAttendanceService
             salaryinfo.setActualSalary(payableSalary.add(attendance.getAttendBonus()).add(BigDecimal.ZERO));
 
             // 插入工资信息
-            salaryinfoService.insertSalaryinfo(salaryinfo);
+            int insertResult = salaryinfoService.insertSalaryinfo(salaryinfo);
+            if (insertResult > 0) {
+                //System.out.println("成功创建工资信息，recordId: " + attendance.getRecordId());
+            } else {
+                //System.err.println("创建工资信息失败，recordId: " + attendance.getRecordId());
+            }
         } catch (Exception e) {
-            // 记录日志，但不影响考勤信息的插入
+            // 记录详细的错误信息
+            System.err.println("创建工资信息时发生异常: " + e.getMessage());
             e.printStackTrace();
         }
     }
+
 
     /**
      * 根据考勤信息更新工资信息
