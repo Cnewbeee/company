@@ -19,6 +19,7 @@ public class Employee extends BaseEntity {
     /**
      * 职工编号
      */
+    @Excel(name = "职工编号")
     private Long empId;
 
     /**

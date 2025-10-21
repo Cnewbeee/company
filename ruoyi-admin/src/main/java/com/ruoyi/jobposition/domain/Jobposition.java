@@ -16,6 +16,7 @@ public class Jobposition extends BaseEntity
     private static final long serialVersionUID = 1L;
 
     /** 职位编号 */
+    @Excel(name = "职位编号")
     private Long posId;
 
     /** 职位名称 */

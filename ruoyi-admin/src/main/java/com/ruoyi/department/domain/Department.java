@@ -18,6 +18,7 @@ public class Department extends BaseEntity
     private static final long serialVersionUID = 1L;
 
     /** 部门编号 */
+    @Excel(name = "部门编号")
     private Long deptId;
 
     /** 部门名称 */

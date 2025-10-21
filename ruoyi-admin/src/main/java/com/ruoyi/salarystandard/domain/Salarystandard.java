@@ -20,11 +20,13 @@ public class Salarystandard extends BaseEntity {
     /**
      * 薪资编号
      */
+    @Excel(name = "薪资编号")
     private Long salaryId;
 
     /**
      * 职位编号（关联职务）
      */
+    @Excel(name = "职位编号")
     private Long posId;
 
     /**

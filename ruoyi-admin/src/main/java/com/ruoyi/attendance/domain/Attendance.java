@@ -19,9 +19,11 @@ public class Attendance extends BaseEntity
     private static final long serialVersionUID = 1L;
 
     /** 记录编号（主键） */
+    @Excel(name = "记录编号")
     private Long recordId;
 
     /** 职工编号（关联员工） */
+    @Excel(name = "职工编号")
     private Long empId;
 
     /** 月出勤天数 */

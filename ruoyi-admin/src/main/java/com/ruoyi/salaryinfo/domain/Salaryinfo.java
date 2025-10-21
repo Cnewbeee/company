@@ -19,9 +19,11 @@ public class Salaryinfo extends BaseEntity
     private static final long serialVersionUID = 1L;
 
     /** 记录编号（主键） */
+    @Excel(name = "记录编号")
     private Long recordId;
 
     /** 职工编号（关联员工） */
+    @Excel(name = "职工编号")
     private Long empId;
 
     /** 应发工资 */
@@ -37,7 +39,7 @@ public class Salaryinfo extends BaseEntity
     private String empName;
 
     /** 实发工资（应发+出勤奖金+其他奖金或处罚） */
-    @Excel(name = "实发工资", readConverterExp = "应=发+出勤奖金+其他奖金或处罚")
+    @Excel(name = "实发工资")
     private BigDecimal actualSalary;
 
     /** 其他奖金或处罚（默认为0） */
