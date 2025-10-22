@@ -51,6 +51,7 @@
                 concat('%', #{bonusPenaltyRemark}, '%')
             </if>
         </where>
+        order by create_time asc
     </select>
 
     <select id="selectSalaryinfoByEmpId" parameterType="Long" resultMap="SalaryinfoResult">

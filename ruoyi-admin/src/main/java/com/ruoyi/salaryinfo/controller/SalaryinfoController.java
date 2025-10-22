@@ -40,6 +40,7 @@ public class SalaryinfoController extends BaseController
     {
         startPage();
         List<Salaryinfo> list = salaryinfoService.selectSalaryinfoList(salaryinfo);
+
         return getDataTable(list);
     }
 
